@@ -10,9 +10,62 @@ export const WaitlistForm: React.FC = () => {
   const [status, setStatus] = useState<WaitlistStatus>(WaitlistStatus.IDLE);
   const [message, setMessage] = useState('');
 
+  // Check if email already exists in waitlist
+  const checkEmailExists = async (emailToCheck: string): Promise<boolean> => {
+    try {
+      // TODO: Replace with actual API endpoint
+      // const response = await fetch('/api/waitlist/check', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ email: emailToCheck })
+      // });
+      // const data = await response.json();
+      // return data.exists;
+
+      // Simulate API call - replace with real API
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      // Simulate: check localStorage for existing emails (for demo purposes)
+      const existingEmails = JSON.parse(localStorage.getItem('waitlist_emails') || '[]');
+      return existingEmails.includes(emailToCheck.toLowerCase());
+    } catch (error) {
+      console.error('Error checking email:', error);
+      return false; // On error, allow submission (fail open)
+    }
+  };
+
+  // Add email to waitlist
+  const addToWaitlist = async (emailToAdd: string): Promise<boolean> => {
+    try {
+      // TODO: Replace with actual API endpoint
+      // const response = await fetch('/api/waitlist/subscribe', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ email: emailToAdd })
+      // });
+      // return response.ok;
+
+      // Simulate API call - replace with real API
+      await new Promise(resolve => setTimeout(resolve, 700));
+      
+      // Simulate: store in localStorage (for demo purposes)
+      const existingEmails = JSON.parse(localStorage.getItem('waitlist_emails') || '[]');
+      if (!existingEmails.includes(emailToAdd.toLowerCase())) {
+        existingEmails.push(emailToAdd.toLowerCase());
+        localStorage.setItem('waitlist_emails', JSON.stringify(existingEmails));
+      }
+      return true;
+    } catch (error) {
+      console.error('Error adding email:', error);
+      return false;
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
+    
+    // Validate email format
     if (!/\S+@\S+\.\S+/.test(email)) {
       setStatus(WaitlistStatus.ERROR);
       setMessage("Please enter a valid email address.");
@@ -21,12 +74,24 @@ export const WaitlistForm: React.FC = () => {
 
     setStatus(WaitlistStatus.LOADING);
 
-    // Simulate API Call
-    setTimeout(() => {
+    // Check if email already exists
+    const emailExists = await checkEmailExists(email);
+    if (emailExists) {
+      setStatus(WaitlistStatus.ERROR);
+      setMessage("This email is already on the waitlist.");
+      return;
+    }
+
+    // Add email to waitlist
+    const success = await addToWaitlist(email);
+    if (success) {
       setStatus(WaitlistStatus.SUCCESS);
       setMessage(HERO_COPY.success);
       setEmail('');
-    }, 1500);
+    } else {
+      setStatus(WaitlistStatus.ERROR);
+      setMessage("Something went wrong. Please try again.");
+    }
   };
 
   return (
