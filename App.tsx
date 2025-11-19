@@ -47,15 +47,6 @@ const App: React.FC = () => {
             <span className="text-lg font-semibold tracking-tight text-white">branched.chat</span>
           </div>
           <nav className="hidden sm:flex items-center gap-6 text-sm text-secondary font-medium">
-            <button 
-              onClick={() => setIsVideoOpen(true)}
-              className="flex items-center gap-2 hover:text-white transition-colors group"
-            >
-              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-white/10 group-hover:bg-white group-hover:text-black transition-all duration-300">
-                <Play className="w-2.5 h-2.5 fill-current" />
-              </div>
-              Video
-            </button>
             <a href="#" className="hover:text-white transition-colors">Manifesto</a>
             <a href="#" className="hover:text-white transition-colors">Twitter</a>
           </nav>
@@ -65,18 +56,30 @@ const App: React.FC = () => {
         <main className="relative z-10 flex-grow flex flex-col items-center justify-center px-4 sm:px-6">
           <div className="max-w-3xl mx-auto text-center space-y-8">
             
-            {/* Badge */}
+            {/* Badge + Demo */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/10 backdrop-blur-md shadow-[0_0_15px_-3px_rgba(255,255,255,0.05)]"
+              className="inline-flex flex-col sm:flex-row items-center gap-3"
             >
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
-              </span>
-              <span className="text-[11px] font-medium text-gray-300 uppercase tracking-widest">Public Beta Soon</span>
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 min-h-[38px] rounded-full border border-white/20 text-white/80">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                </span>
+                <span className="text-[11px] font-medium text-gray-300 uppercase tracking-widest">Public Beta Soon</span>
+              </div>
+
+              <button
+                onClick={() => setIsVideoOpen(true)}
+                className="group inline-flex items-center gap-2 px-4 py-1.5 min-h-[38px] rounded-full bg-white text-black text-[11px] font-semibold uppercase tracking-[0.2em] hover:bg-white/90 transition-colors shadow-[0_10px_30px_-12px_rgba(255,255,255,0.5)]"
+              >
+                <div className="flex items-center justify-center w-6 h-6 rounded-full bg-black/10 text-black group-hover:bg-black/20 transition-colors">
+                  <Play className="w-3 h-3" />
+                </div>
+                Watch demo
+              </button>
             </motion.div>
 
             {/* Hero Typography */}

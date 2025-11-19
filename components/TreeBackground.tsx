@@ -68,7 +68,8 @@ const TreeBackground: React.FC = () => {
               fill="none"
               stroke={node.active ? nodeColor : "#333"}
               strokeWidth={node.active ? 1.5 : 1} 
-              strokeDasharray="6 6" 
+              strokeDasharray={node.active ? '8 10' : '4 12'}
+              strokeLinecap="round"
               initial={{ pathLength: 0, opacity: 0 }}
               animate={{ 
                 pathLength: 1, 
@@ -140,7 +141,7 @@ const TreeBackground: React.FC = () => {
                   animate={{ opacity: 0.5 }}
                   transition={{ delay: node.delay + 0.8 }}
                   x={x}
-                  y={y - NODE_HEIGHT / 2 - 8}
+                  y={isInput ? y - NODE_HEIGHT / 2 - 8 : y + NODE_HEIGHT / 2 + 12}
                   textAnchor="middle"
                   className="text-[10px] font-sans font-medium uppercase tracking-widest select-none"
                   style={{ fill: isActive ? nodeColor : '#555' }}
