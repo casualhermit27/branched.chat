@@ -6,23 +6,23 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'ghost';
 }
 
-export const Button: React.FC<ButtonProps> = ({ 
-  children, 
-  isLoading, 
-  variant = 'primary', 
+export const Button: React.FC<ButtonProps> = ({
+  children,
+  isLoading,
+  variant = 'primary',
   className = '',
-  ...props 
+  ...props
 }) => {
   const baseStyles = "relative overflow-hidden inline-flex items-center justify-center px-6 py-2 text-sm font-medium transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-white/20 rounded-full group";
-  
+
   const variants = {
     // Updated primary to have a subtle vertical gradient for volume
-    primary: "bg-gradient-to-b from-white to-gray-300 text-black hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] border border-transparent hover:to-white",
+    primary: "bg-gradient-to-b from-white to-gray-300 text-black hover:shadow-[0_0_25px_rgba(255,255,255,0.4)] border border-transparent hover:to-white hover:scale-[1.02] active:scale-[0.98]",
     ghost: "bg-transparent text-gray-400 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10",
   };
 
   return (
-    <button 
+    <button
       className={`${baseStyles} ${variants[variant]} ${className}`}
       disabled={isLoading || props.disabled}
       {...props}

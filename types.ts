@@ -9,6 +9,7 @@ export interface Node {
   delay?: number;
   type?: 'input' | 'ai';
   color?: string;
+  icons?: string[];
 }
 
 export enum WaitlistStatus {

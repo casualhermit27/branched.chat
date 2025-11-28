@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { TREE_NODES } from '../constants';
 
-const NODE_WIDTH = 140; 
+const NODE_WIDTH = 140;
 const NODE_HEIGHT = 60;
 
 const TreeBackground: React.FC = () => {
@@ -13,7 +13,7 @@ const TreeBackground: React.FC = () => {
     const handleResize = () => {
       setWindowSize({ width: window.innerWidth, height: window.innerHeight });
     };
-    
+
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -35,8 +35,8 @@ const TreeBackground: React.FC = () => {
   return (
     <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none bg-[#0a0a0a]">
       {/* Dot Grid Pattern */}
-      <div 
-        className="absolute inset-0 opacity-[0.07]" 
+      <div
+        className="absolute inset-0 opacity-[0.07]"
         style={{
           backgroundImage: 'radial-gradient(#505050 1px, transparent 1px)',
           backgroundSize: '24px 24px'
@@ -67,13 +67,13 @@ const TreeBackground: React.FC = () => {
               d={getPath(x1, y1, x2, y2)}
               fill="none"
               stroke={node.active ? nodeColor : "#333"}
-              strokeWidth={node.active ? 1.5 : 1} 
+              strokeWidth={node.active ? 1.5 : 1}
               strokeDasharray={node.active ? '8 10' : '4 12'}
               strokeLinecap="round"
               initial={{ pathLength: 0, opacity: 0 }}
-              animate={{ 
-                pathLength: 1, 
-                opacity: node.active ? 0.35 : 0.05 
+              animate={{
+                pathLength: 1,
+                opacity: node.active ? 0.35 : 0.05
               }}
               transition={{ duration: 2, delay: node.delay, ease: "easeInOut" }}
             />
@@ -110,22 +110,37 @@ const TreeBackground: React.FC = () => {
 
               {/* Node Content Skeleton */}
               <g transform={`translate(${x - NODE_WIDTH / 2}, ${y - NODE_HEIGHT / 2})`}>
-                {/* Header dot */}
-                <circle 
-                  cx={16} 
-                  cy={16} 
-                  r={3} 
-                  fill={isInput ? "#444" : (isActive ? nodeColor : "#333")}
-                  fillOpacity={isActive ? 0.8 : 0.2}
-                />
+                {/* Header Icon(s) or Dot */}
+                {node.icons && node.icons.length > 0 ? (
+                  node.icons.map((icon, index) => (
+                    <image
+                      key={index}
+                      href={icon}
+                      x={8 + (index * 16)}
+                      y={8}
+                      height="16"
+                      width="16"
+                      style={{ opacity: isActive ? 1 : 0.5 }}
+                    />
+                  ))
+                ) : (
+                  <circle
+                    cx={16}
+                    cy={16}
+                    r={3}
+                    fill={isInput ? "#444" : (isActive ? nodeColor : "#333")}
+                    fillOpacity={isActive ? 0.8 : 0.2}
+                  />
+                )}
+
                 {/* Header Line */}
-                <rect 
-                  x={26} 
-                  y={14} 
-                  width={isInput ? 30 : 50} 
-                  height={4} 
-                  rx={2} 
-                  fill={isInput ? "#333" : (isActive ? nodeColor : "#1f1f1f")} 
+                <rect
+                  x={node.icons && node.icons.length > 0 ? 8 + (node.icons.length * 16) + 8 : 32}
+                  y={14}
+                  width={isInput ? 30 : 50}
+                  height={4}
+                  rx={2}
+                  fill={isInput ? "#333" : (isActive ? nodeColor : "#1f1f1f")}
                   fillOpacity={isActive ? 0.4 : 0.3}
                 />
 
@@ -153,7 +168,7 @@ const TreeBackground: React.FC = () => {
           );
         })}
       </svg>
-      
+
       {/* Vignette Overlays */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a] via-transparent to-[#0a0a0a] pointer-events-none h-24 top-0 opacity-80" />
       <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-[#0a0a0a] pointer-events-none h-64 bottom-0 top-auto opacity-80" />
