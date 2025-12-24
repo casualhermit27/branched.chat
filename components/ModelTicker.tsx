@@ -16,7 +16,7 @@ interface ModelTickerProps {
 
 export const ModelTicker: React.FC<ModelTickerProps> = ({ isDark = true }) => {
     return (
-        <div className={`w-full overflow-hidden py-12 border-y transition-colors duration-500 ${isDark ? 'border-white/5 bg-white/[0.02]' : 'border-gray-200 bg-gray-50/50'}`}>
+        <div className={`w-full overflow-hidden py-12 border-y transition-colors duration-700 ease-in-out ${isDark ? 'border-white/5 bg-white/[0.02]' : 'border-gray-200 bg-gray-50/50'}`}>
             <div className="max-w-7xl mx-auto px-6 mb-8 text-center">
                 <p className={`text-xs font-medium uppercase tracking-widest ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>Powering your thoughts with the world's best models</p>
             </div>

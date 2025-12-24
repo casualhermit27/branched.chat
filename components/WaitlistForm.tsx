@@ -131,7 +131,7 @@ export const WaitlistForm: React.FC<WaitlistFormProps> = ({ isDark = true }) => 
                         onSubmit={handleSubmit}
                         className="relative group"
                     >
-                        <div className={`relative flex items-center h-14 backdrop-blur-sm rounded-2xl border focus-within:ring-1 focus-within:ring-blue-500/50 transition-all duration-300 ${isDark ? 'bg-white/5 border-white/10 focus-within:bg-white/10' : 'bg-gray-100 border-transparent focus-within:bg-white focus-within:border-gray-300 shadow-sm'}`}>
+                        <div className={`relative flex items-center h-14 backdrop-blur-sm rounded-2xl border transition-all duration-700 ease-in-out ${isDark ? 'bg-white/5 border-white/10 focus-within:bg-white/10 focus-within:border-white/20' : 'bg-white border-gray-200 shadow-sm focus-within:border-blue-500 focus-within:ring-4 focus-within:ring-blue-500/10'}`}>
 
                             <input
                                 type="email"

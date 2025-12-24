@@ -26,7 +26,7 @@ function App() {
     const toggleTheme = () => setIsDark(!isDark);
 
     return (
-        <div className={`relative min-h-screen transition-colors duration-500 overflow-x-hidden font-sans ${isDark ? 'bg-[#0a0a0a] text-white selection:bg-blue-500/30' : 'bg-[#fafafa] text-gray-900 selection:bg-blue-500/20'}`}>
+        <div className={`relative min-h-screen transition-colors duration-700 ease-in-out overflow-x-hidden font-sans ${isDark ? 'bg-[#0a0a0a] text-white selection:bg-blue-500/30' : 'bg-[#fafafa] text-gray-900 selection:bg-blue-500/20'}`}>
             {/* Background is persistent but responsive to theme via props or CSS classes */}
             <TreeBackground isDark={isDark} />
 
@@ -56,7 +56,7 @@ function App() {
                     </motion.div>
                 </main>
 
-                <footer className={`py-8 text-center text-[10px] uppercase tracking-widest transition-colors duration-500 ${isDark ? 'text-white/20' : 'text-black/20'}`}>
+                <footer className={`py-8 text-center text-[10px] uppercase tracking-widest transition-colors duration-700 ease-in-out ${isDark ? 'text-white/20' : 'text-black/20'}`}>
                     © 2025 branched.chat — Define the future of thought.
                 </footer>
             </div>
