@@ -6,69 +6,64 @@ import { HERO_COPY } from '../constants';
 
 interface HeroProps {
     onWatchDemo: () => void;
+    isDark: boolean;
 }
 
-export const Hero: React.FC<HeroProps> = ({ onWatchDemo }) => {
+export const Hero: React.FC<HeroProps> = ({ onWatchDemo, isDark }) => {
     return (
-        <div className="max-w-3xl mx-auto text-center space-y-8">
-            {/* Badge + Demo */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="inline-flex flex-col sm:flex-row items-center gap-3"
-            >
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 min-h-[38px] rounded-full border border-white/20 text-white/80">
-                    <span className="relative flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
-                    </span>
-                    <span className="text-[11px] font-medium text-gray-300 uppercase tracking-widest">Public Beta Soon</span>
-                </div>
-
-                <button
-                    onClick={onWatchDemo}
-                    aria-label="Watch product demo"
-                    className="relative overflow-hidden group inline-flex items-center gap-2 px-5 py-2 min-h-[40px] rounded-full bg-white/5 border border-white/10 backdrop-blur-md text-white text-[11px] font-medium uppercase tracking-widest hover:bg-white/10 hover:border-white/20 transition-all duration-300 hover:shadow-[0_0_25px_rgba(255,255,255,0.2)]"
-                >
-                    <div className="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/10 to-transparent z-0" />
-                    <div className="relative z-10 flex items-center justify-center w-6 h-6 rounded-full bg-white/10 group-hover:bg-white text-white group-hover:text-black transition-colors duration-300">
-                        <Play className="w-3 h-3 fill-current" />
-                    </div>
-                    <span className="relative z-10">Watch demo</span>
-                </button>
-            </motion.div>
+        <div className="relative max-w-3xl mx-auto text-center space-y-12 z-10">
+            {/* Ambient Glow - Subtle in both apps but maybe lighter in light mode */}
+            <div className={`absolute -top-40 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full blur-[120px] pointer-events-none ${isDark ? 'bg-blue-500/10' : 'bg-blue-500/5'}`} />
 
             {/* Hero Typography */}
-            <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.1 }}
-                className="text-5xl sm:text-7xl font-light tracking-tighter text-white"
-            >
-                <span
-                    className="block bg-gradient-to-b from-white via-white to-white/50 bg-clip-text text-transparent pb-2"
+            <div className="relative space-y-8">
+                <motion.h1
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                    className={`text-4xl sm:text-6xl md:text-7xl font-extralight tracking-tighter text-transparent bg-clip-text bg-gradient-to-b ${isDark ? 'from-white via-white/90 to-white/50' : 'from-black via-gray-800 to-gray-500'}`}
                 >
                     {HERO_COPY.title}
-                </span>
-            </motion.h1>
+                </motion.h1>
 
-            <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="text-lg sm:text-xl text-gray-400 max-w-xl mx-auto leading-relaxed font-light"
-            >
-                {HERO_COPY.subtitle}
-            </motion.p>
+                <motion.p
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                    className={`text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed font-light tracking-wide ${isDark ? 'text-gray-400/80' : 'text-gray-600'}`}
+                >
+                    {HERO_COPY.subtitle}
+                </motion.p>
+
+                {/* Watch Demo Button - Minimal with Border Shine */}
+                <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.4, ease: "easeOut" }}
+                    className="flex justify-center pt-8"
+                >
+                    <button
+                        onClick={onWatchDemo}
+                        aria-label="Watch product demo"
+                        className={`group relative inline-flex items-center gap-3 px-8 py-3.5 rounded-full border transition-all duration-500 overflow-hidden ${isDark ? 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20' : 'bg-white border-black/20 hover:bg-gray-50 hover:border-black/40 shadow-sm'}`}
+                    >
+                        {/* Shine Effect */}
+                        <div className={`absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r z-0 ease-in-out ${isDark ? 'from-transparent via-white/20 to-transparent' : 'from-transparent via-black/5 to-transparent'}`} />
+
+                        <Play className={`w-3 h-3 fill-current transition-colors relative z-10 ${isDark ? 'text-gray-300 group-hover:text-white' : 'text-gray-700 group-hover:text-black'}`} />
+                        <span className={`text-xs uppercase tracking-widest font-medium transition-colors relative z-10 ${isDark ? 'text-gray-300 group-hover:text-white' : 'text-gray-700 group-hover:text-black'}`}>Watch the demo</span>
+                    </button>
+                </motion.div>
+            </div>
 
             {/* Interactive Form */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
+                transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+                className="pt-4"
             >
-                <WaitlistForm />
+                <WaitlistForm isDark={isDark} />
             </motion.div>
         </div>
     );

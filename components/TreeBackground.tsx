@@ -6,7 +6,11 @@ import { TREE_NODES } from '../constants';
 const NODE_WIDTH = 140;
 const NODE_HEIGHT = 60;
 
-const TreeBackground: React.FC = () => {
+interface TreeBackgroundProps {
+  isDark?: boolean;
+}
+
+const TreeBackground: React.FC<TreeBackgroundProps> = ({ isDark = true }) => {
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
@@ -32,13 +36,15 @@ const TreeBackground: React.FC = () => {
     return `M ${x1} ${startY} L ${x1} ${midY} L ${x2} ${midY} L ${x2} ${endY}`;
   };
 
+  const bgColor = isDark ? "#0a0a0a" : "#fafafa";
+
   return (
-    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none bg-[#0a0a0a]">
+    <div className={`absolute inset-0 z-0 overflow-hidden pointer-events-none select-none transition-colors duration-500`} style={{ backgroundColor: bgColor }}>
       {/* Dot Grid Pattern */}
       <div
         className="absolute inset-0 opacity-[0.07]"
         style={{
-          backgroundImage: 'radial-gradient(#505050 1px, transparent 1px)',
+          backgroundImage: `radial-gradient(${isDark ? '#505050' : '#d4d4d4'} 1px, transparent 1px)`,
           backgroundSize: '24px 24px'
         }}
       />
@@ -66,14 +72,14 @@ const TreeBackground: React.FC = () => {
               key={`link-${parent.id}-${node.id}`}
               d={getPath(x1, y1, x2, y2)}
               fill="none"
-              stroke={node.active ? nodeColor : "#333"}
+              stroke={node.active ? nodeColor : (isDark ? "#404040" : "#cbd5e1")} // Darker gray for light mode connections
               strokeWidth={node.active ? 1.5 : 1}
-              strokeDasharray={node.active ? '8 10' : '4 12'}
+              strokeDasharray={node.active ? 'none' : '4 4'}
               strokeLinecap="round"
               initial={{ pathLength: 0, opacity: 0 }}
               animate={{
                 pathLength: 1,
-                opacity: node.active ? 0.35 : 0.05
+                opacity: node.active ? 0.4 : (isDark ? 0.08 : 0.4) // Higher opacity in light mode
               }}
               transition={{ duration: 2, delay: node.delay, ease: "easeInOut" }}
             />
@@ -96,16 +102,24 @@ const TreeBackground: React.FC = () => {
               transition={{ duration: 0.8, delay: node.delay + 0.2 }}
             >
               {/* Node Background */}
-              <rect
+              <motion.rect
                 x={x - NODE_WIDTH / 2}
                 y={y - NODE_HEIGHT / 2}
                 width={NODE_WIDTH}
                 height={NODE_HEIGHT}
-                rx={8}
-                fill={isInput ? "#121212" : "#0a0a0a"}
-                stroke={isActive ? nodeColor : "#333"}
+                rx={12}
+                fill={isInput ? (isDark ? "#121212" : "#e2e8f0") : (isDark ? "#0a0a0a" : "#ffffff")} // Clearer distinction
+                stroke={isActive ? nodeColor : (isDark ? "#333" : "#cbd5e1")} // Darker border
                 strokeWidth={isActive ? 1.5 : 1}
-                strokeOpacity={isActive ? 0.4 : 0.1}
+                strokeOpacity={isActive ? 0.4 : (isDark ? 0.1 : 0.5)} // Much more visible border
+                animate={isActive ? {
+                  strokeOpacity: [0.3, 0.6, 0.3],
+                } : {}}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
               />
 
               {/* Node Content Skeleton */}
@@ -116,37 +130,37 @@ const TreeBackground: React.FC = () => {
                     <image
                       key={index}
                       href={icon}
-                      x={8 + (index * 16)}
-                      y={8}
-                      height="16"
-                      width="16"
-                      style={{ opacity: isActive ? 1 : 0.5 }}
+                      x={12 + (index * 16)}
+                      y={10}
+                      height="14"
+                      width="14"
+                      style={{ opacity: isActive ? 0.9 : 0.5 }}
                     />
                   ))
                 ) : (
                   <circle
-                    cx={16}
-                    cy={16}
+                    cx={20}
+                    cy={18}
                     r={3}
-                    fill={isInput ? "#444" : (isActive ? nodeColor : "#333")}
-                    fillOpacity={isActive ? 0.8 : 0.2}
+                    fill={isInput ? (isDark ? "#444" : "#94a3b8") : (isActive ? nodeColor : (isDark ? "#333" : "#cbd5e1"))}
+                    fillOpacity={isActive ? 0.8 : (isDark ? 0.2 : 0.8)}
                   />
                 )}
 
                 {/* Header Line */}
                 <rect
-                  x={node.icons && node.icons.length > 0 ? 8 + (node.icons.length * 16) + 8 : 32}
-                  y={14}
-                  width={isInput ? 30 : 50}
-                  height={4}
-                  rx={2}
-                  fill={isInput ? "#333" : (isActive ? nodeColor : "#1f1f1f")}
+                  x={node.icons && node.icons.length > 0 ? 12 + (node.icons.length * 16) + 8 : 36}
+                  y={16}
+                  width={isInput ? 30 : 40}
+                  height={3}
+                  rx={1.5}
+                  fill={isInput ? (isDark ? "#333" : "#ddd") : (isActive ? nodeColor : (isDark ? "#1f1f1f" : "#f0f0f0"))}
                   fillOpacity={isActive ? 0.4 : 0.3}
                 />
 
                 {/* Text Lines */}
-                <rect x={16} y={30} width={NODE_WIDTH - 32} height={3} rx={1.5} fill={isInput ? "#222" : (isActive ? "#334155" : "#1a1a1a")} fillOpacity={0.6} />
-                <rect x={16} y={38} width={(NODE_WIDTH - 32) * 0.7} height={3} rx={1.5} fill={isInput ? "#222" : (isActive ? "#334155" : "#1a1a1a")} fillOpacity={0.6} />
+                <rect x={16} y={30} width={NODE_WIDTH - 32} height={3} rx={1.5} fill={isInput ? (isDark ? "#222" : "#e5e5e5") : (isActive ? (isDark ? "#334155" : "#94a3b8") : (isDark ? "#1a1a1a" : "#f5f5f5"))} fillOpacity={0.6} />
+                <rect x={16} y={38} width={(NODE_WIDTH - 32) * 0.7} height={3} rx={1.5} fill={isInput ? (isDark ? "#222" : "#e5e5e5") : (isActive ? (isDark ? "#334155" : "#94a3b8") : (isDark ? "#1a1a1a" : "#f5f5f5"))} fillOpacity={0.6} />
               </g>
 
               {/* Label */}
@@ -159,7 +173,7 @@ const TreeBackground: React.FC = () => {
                   y={isInput ? y - NODE_HEIGHT / 2 - 8 : y + NODE_HEIGHT / 2 + 12}
                   textAnchor="middle"
                   className="text-[10px] font-sans font-medium uppercase tracking-widest select-none"
-                  style={{ fill: isActive ? nodeColor : '#555' }}
+                  style={{ fill: isActive ? nodeColor : (isDark ? '#555' : '#999') }}
                 >
                   {node.label}
                 </motion.text>
@@ -169,10 +183,10 @@ const TreeBackground: React.FC = () => {
         })}
       </svg>
 
-      {/* Vignette Overlays */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a] via-transparent to-[#0a0a0a] pointer-events-none h-24 top-0 opacity-80" />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-[#0a0a0a] pointer-events-none h-64 bottom-0 top-auto opacity-80" />
-      <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-transparent to-[#0a0a0a] pointer-events-none opacity-60" />
+      {/* Vignette Overlays - Responsive Colors */}
+      <div className={`absolute inset-0 bg-gradient-to-b ${isDark ? 'from-[#0a0a0a] via-transparent to-[#0a0a0a]' : 'from-[#fafafa] via-transparent to-[#fafafa]'} pointer-events-none h-24 top-0 opacity-80`} />
+      <div className={`absolute inset-0 bg-gradient-to-t ${isDark ? 'from-[#0a0a0a] via-transparent to-[#0a0a0a]' : 'from-[#fafafa] via-transparent to-[#fafafa]'} pointer-events-none h-64 bottom-0 top-auto opacity-80`} />
+      <div className={`absolute inset-0 bg-gradient-to-r ${isDark ? 'from-[#0a0a0a] via-transparent to-[#0a0a0a]' : 'from-[#fafafa] via-transparent to-[#fafafa]'} pointer-events-none opacity-60`} />
     </div>
   );
 };

@@ -1,70 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>branched.chat - Think in Parallel</title>
-    <meta name="description" content="Branched.chat allows you to explore multiple conversation paths simultaneously. Define the future of thought with our branching interface." />
-    <meta name="theme-color" content="#0a0a0a" />
-    
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://branched.chat/" />
-    <meta property="og:title" content="branched.chat - Think in Parallel" />
-    <meta property="og:description" content="Branched.chat allows you to explore multiple conversation paths simultaneously. Define the future of thought with our branching interface." />
-    <meta property="og:image" content="https://branched.chat/og-image.png" />
 
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://branched.chat/" />
-    <meta property="twitter:title" content="branched.chat - Think in Parallel" />
-    <meta property="twitter:description" content="Branched.chat allows you to explore multiple conversation paths simultaneously. Define the future of thought with our branching interface." />
-    <meta property="twitter:image" content="https://branched.chat/og-image.png" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>branched.chat - Think in Parallel</title>
+  <meta name="description"
+    content="Branched.chat allows you to explore multiple conversation paths simultaneously. Define the future of thought with our branching interface." />
+  <meta name="theme-color" content="#0a0a0a" />
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['Inter', 'sans-serif'],
-            },
-            colors: {
-              background: '#0a0a0a',
-              surface: '#171717',
-              primary: '#e5e5e5',
-              secondary: '#a3a3a3',
-              accent: '#3b82f6', // Subtle blue for active branches
-            }
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://branched.chat/" />
+  <meta property="og:title" content="branched.chat - Think in Parallel" />
+  <meta property="og:description"
+    content="Branched.chat allows you to explore multiple conversation paths simultaneously. Define the future of thought with our branching interface." />
+  <meta property="og:image" content="https://branched.chat/og-image.png" />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://branched.chat/" />
+  <meta property="twitter:title" content="branched.chat - Think in Parallel" />
+  <meta property="twitter:description"
+    content="Branched.chat allows you to explore multiple conversation paths simultaneously. Define the future of thought with our branching interface." />
+  <meta property="twitter:image" content="https://branched.chat/og-image.png" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            background: '#0a0a0a',
+            surface: '#171717',
+            primary: '#e5e5e5',
+            secondary: '#a3a3a3',
+            accent: '#3b82f6', // Subtle blue for active branches
           }
         }
       }
-    </script>
-    <style>
-      body {
-        background-color: #0a0a0a;
-        color: #e5e5e5;
-        font-family: 'Inter', sans-serif;
-        overflow-x: hidden;
+    }
+  </script>
+  <style>
+    body {
+      background-color: #0a0a0a;
+      color: #e5e5e5;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Custom scrollbar for a cleaner look */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #0a0a0a;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #262626;
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #404040;
+    }
+
+    /* Global Animation Keyframes */
+    @keyframes shimmer {
+      100% {
+        transform: translateX(100%);
       }
-      /* Custom scrollbar for a cleaner look */
-      ::-webkit-scrollbar {
-        width: 6px;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
       }
-      ::-webkit-scrollbar-track {
-        background: #0a0a0a;
+
+      50% {
+        opacity: 0;
       }
-      ::-webkit-scrollbar-thumb {
-        background: #262626;
-        border-radius: 3px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #404040;
-      }
-    </style>
+    }
+  </style>
   <script type="importmap">
 {
   "imports": {
@@ -76,10 +103,11 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
 </head>
-  <body>
-    <div id="root"></div>
+
+<body>
+  <div id="root"></div>
   <script type="module" src="/index.tsx"></script>
 </body>
+
 </html>
