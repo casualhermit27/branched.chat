@@ -1,13 +1,8 @@
 import React, { useState } from 'react';
-import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { Features } from './components/Features';
-import TreeBackground from './components/TreeBackground';
-import { AboutSidebar } from './components/AboutSidebar';
-import { motion } from 'framer-motion';
-
 import { ModelTicker } from './components/ModelTicker';
-
+import { AboutSidebar } from './components/AboutSidebar';
 import { VideoModal } from './components/VideoModal';
 
 function App() {
@@ -27,39 +22,37 @@ function App() {
 
     return (
         <div className={`relative min-h-screen transition-colors duration-700 ease-in-out overflow-x-hidden font-sans ${isDark ? 'bg-[#0a0a0a] text-white selection:bg-blue-500/30' : 'bg-[#fafafa] text-gray-900 selection:bg-blue-500/20'}`}>
-            {/* Background is persistent but responsive to theme via props or CSS classes */}
-            <TreeBackground isDark={isDark} />
-
             {/* Overlays */}
             <AboutSidebar isOpen={isAboutOpen} onClose={() => setIsAboutOpen(false)} />
             <VideoModal isOpen={isVideoOpen} onClose={() => setIsVideoOpen(false)} videoId="dQw4w9WgXcQ" />
 
-            <div className="relative z-10 flex flex-col min-h-screen">
-                <Header onOpenAbout={() => setIsAboutOpen(true)} isDark={isDark} toggleTheme={toggleTheme} />
+            {/* Content */}
+            <div className="relative z-10">
+                {/* Section 1: Hero with Header inside */}
+                <Hero
+                    onWatchDemo={() => setIsVideoOpen(true)}
+                    isDark={isDark}
+                    onOpenAbout={() => setIsAboutOpen(true)}
+                    toggleTheme={toggleTheme}
+                />
 
-                <main className="flex-grow flex flex-col relative">
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.5 }}
-                        className="flex-grow flex flex-col justify-start pt-[18vh] gap-32 pb-32"
-                    >
-                        <section className="flex items-center justify-center px-6 relative">
-                            <Hero onWatchDemo={() => setIsVideoOpen(true)} isDark={isDark} />
-                        </section>
+                {/* Section 2: Models Supported Band */}
+                <ModelTicker isDark={isDark} />
 
-                        <div className="pt-32 w-full">
-                            <ModelTicker isDark={isDark} />
-                        </div>
+                {/* Section 3: Features */}
+                <Features isDark={isDark} />
 
-                        <Features isDark={isDark} />
-                    </motion.div>
-                </main>
-
-                <footer className={`py-8 text-center text-[10px] uppercase tracking-widest transition-colors duration-700 ease-in-out ${isDark ? 'text-white/20' : 'text-black/20'}`}>
-                    © 2025 branched.chat — Define the future of thought.
+                {/* Footer */}
+                <footer className={`py-16 text-center ${isDark ? 'bg-[#0a0a0a]' : 'bg-[#fafafa]'}`}>
+                    <p className={`text-[10px] uppercase tracking-[0.2em] ${isDark ? 'text-white/15' : 'text-black/15'}`}>
+                        © 2025 branched.chat
+                    </p>
                 </footer>
             </div>
+
+            <style dangerouslySetInnerHTML={{
+                __html: `html { scroll-behavior: smooth; }`
+            }} />
         </div>
     );
 }

@@ -1,34 +1,71 @@
-
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { TREE_NODES } from '../constants';
 
-const NODE_WIDTH = 140;
-const NODE_HEIGHT = 60;
+const NODE_WIDTH = 120;
+const NODE_HEIGHT = 52;
 
 interface TreeBackgroundProps {
   isDark?: boolean;
 }
 
+// Scroll-based reveal
+const BRANCH_LEVELS: Record<string, { start: number; end: number }> = {
+  'root': { start: 0, end: 0 },
+  'L1-Left': { start: 0, end: 0 },
+  'L1-Right': { start: 0, end: 0 },
+  'L2-Left-1': { start: 0, end: 0 },
+  'L2-Right-1': { start: 0, end: 0 },
+  'L2-Right-2': { start: 0, end: 0 },
+  'L2-Right-3': { start: 0, end: 0 },
+  'L3-Left-1': { start: 150, end: 900 },
+  'L3-Left-2': { start: 150, end: 900 },
+  'L3-Left-3': { start: 150, end: 900 },
+  'L3-Right-1': { start: 150, end: 900 },
+  'L3-Right-2': { start: 150, end: 900 },
+};
+
 const TreeBackground: React.FC<TreeBackgroundProps> = ({ isDark = true }) => {
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
+  const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
     const handleResize = () => {
       setWindowSize({ width: window.innerWidth, height: window.innerHeight });
     };
 
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
     handleResize();
+    handleScroll();
+
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   if (windowSize.width === 0) return null;
 
-  const getX = (percent: number) => (percent / 100) * windowSize.width;
+  // Position tree on right side of screen (offset by 15% to push right)
+  const treeOffsetX = 15;
+  const getX = (percent: number) => ((percent + treeOffsetX) / 100) * windowSize.width;
   const getY = (percent: number) => (percent / 100) * windowSize.height;
 
-  // Orthogonal path generator
+  const getScrollProgress = (nodeId: string) => {
+    const scrollRange = BRANCH_LEVELS[nodeId];
+    if (!scrollRange || (scrollRange.start === 0 && scrollRange.end === 0)) {
+      return 1;
+    }
+    const progress = (scrollY - scrollRange.start) / (scrollRange.end - scrollRange.start);
+    return Math.max(0, Math.min(1, progress));
+  };
+
   const getPath = (x1: number, y1: number, x2: number, y2: number) => {
     const startY = y1 + NODE_HEIGHT / 2;
     const endY = y2 - NODE_HEIGHT / 2;
@@ -36,54 +73,49 @@ const TreeBackground: React.FC<TreeBackgroundProps> = ({ isDark = true }) => {
     return `M ${x1} ${startY} L ${x1} ${midY} L ${x2} ${midY} L ${x2} ${endY}`;
   };
 
+  const getPathLength = (x1: number, y1: number, x2: number, y2: number) => {
+    const startY = y1 + NODE_HEIGHT / 2;
+    const endY = y2 - NODE_HEIGHT / 2;
+    const midY = startY + (endY - startY) / 2;
+    return Math.abs(midY - startY) + Math.abs(x2 - x1) + Math.abs(endY - midY);
+  };
+
   const bgColor = isDark ? "#0a0a0a" : "#fafafa";
 
   return (
-    <div className={`absolute inset-0 z-0 overflow-hidden pointer-events-none select-none transition-colors duration-700 ease-in-out`} style={{ backgroundColor: bgColor }}>
-
-      {/* --- LIGHT MODE BACKGROUND LAYER --- */}
+    <div
+      className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none transition-colors duration-700 ease-in-out"
+      style={{ backgroundColor: bgColor }}
+    >
+      {/* Light Mode Background */}
       <div
         className="absolute inset-0 transition-opacity duration-700 ease-in-out"
         style={{ opacity: isDark ? 0 : 1 }}
       >
-        {/* React Flow Style Dots (Light) */}
         <div
-          className="absolute inset-0 opacity-[0.4]"
+          className="absolute inset-0 opacity-[0.25]"
           style={{
-            backgroundImage: `radial-gradient(#b1b1b7 1px, transparent 1px)`,
-            backgroundSize: '20px 20px'
+            backgroundImage: `radial-gradient(#c0c0c5 1px, transparent 1px)`,
+            backgroundSize: '24px 24px'
           }}
         />
-        {/* Light Vignettes */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#fafafa] via-transparent to-[#fafafa] h-32 top-0" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#fafafa] via-transparent to-[#fafafa] h-64 bottom-0 top-auto" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#fafafa] via-transparent to-[#fafafa] opacity-40" />
       </div>
 
-      {/* --- DARK MODE BACKGROUND LAYER --- */}
+      {/* Dark Mode Background */}
       <div
         className="absolute inset-0 transition-opacity duration-700 ease-in-out"
         style={{ opacity: isDark ? 1 : 0 }}
       >
-        {/* React Flow Style Dots (Dark) */}
         <div
-          className="absolute inset-0 opacity-[0.2]"
+          className="absolute inset-0 opacity-[0.15]"
           style={{
             backgroundImage: `radial-gradient(#505050 1px, transparent 1px)`,
-            backgroundSize: '20px 20px'
+            backgroundSize: '24px 24px'
           }}
         />
-        {/* Dark Vignettes */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a] via-transparent to-[#0a0a0a] h-32 top-0" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-[#0a0a0a] h-64 bottom-0 top-auto" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-transparent to-[#0a0a0a] opacity-40" />
       </div>
 
       <svg width="100%" height="100%" className="absolute inset-0">
-        <defs>
-          {/* We remove the generic blue gradient and rely on specific colors */}
-        </defs>
-
         {/* Connections */}
         {TREE_NODES.map((node) => {
           if (!node.parentId) return null;
@@ -95,23 +127,43 @@ const TreeBackground: React.FC<TreeBackgroundProps> = ({ isDark = true }) => {
           const x2 = getX(node.x);
           const y2 = getY(node.y);
 
-          const nodeColor = node.color || "#3b82f6"; // Fallback blue
+          const nodeColor = node.color || "#3b82f6";
+          const scrollRange = BRANCH_LEVELS[node.id] || { start: 0, end: 0 };
+          const isInitiallyVisible = scrollRange.start === 0 && scrollRange.end === 0;
+          const progress = getScrollProgress(node.id);
+
+          const baseOpacity = 0.45;
+          const pathLength = getPathLength(x1, y1, x2, y2);
+          const strokeWidth = 1;
+
+          if (isInitiallyVisible) {
+            return (
+              <motion.path
+                key={`link-${parent.id}-${node.id}`}
+                d={getPath(x1, y1, x2, y2)}
+                fill="none"
+                strokeWidth={strokeWidth}
+                strokeLinecap="round"
+                stroke={nodeColor}
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={{ pathLength: 1, opacity: baseOpacity }}
+                transition={{ duration: 2, delay: node.delay || 0, ease: "easeOut" }}
+              />
+            );
+          }
 
           return (
-            <motion.path
+            <path
               key={`link-${parent.id}-${node.id}`}
               d={getPath(x1, y1, x2, y2)}
               fill="none"
-              strokeWidth={node.active ? 1.5 : 1}
-              strokeDasharray={node.active ? 'none' : '4 4'}
+              strokeWidth={strokeWidth}
               strokeLinecap="round"
-              initial={{ pathLength: 0, opacity: 0, stroke: isDark ? "#404040" : "#cbd5e1" }}
-              animate={{
-                pathLength: 1,
-                opacity: node.active ? 0.4 : (isDark ? 0.08 : 0.4),
-                stroke: node.active ? nodeColor : (isDark ? "#404040" : "#cbd5e1")
-              }}
-              transition={{ duration: 2, delay: node.delay, ease: "easeInOut" }}
+              stroke={nodeColor}
+              opacity={progress * baseOpacity}
+              strokeDasharray={pathLength}
+              strokeDashoffset={pathLength * (1 - progress)}
+              style={{ transition: 'stroke-dashoffset 0.5s ease-out, opacity 0.5s ease-out' }}
             />
           );
         })}
@@ -121,110 +173,118 @@ const TreeBackground: React.FC<TreeBackgroundProps> = ({ isDark = true }) => {
           const x = getX(node.x);
           const y = getY(node.y);
           const isInput = node.type === 'input';
-          const isActive = node.active;
           const nodeColor = node.color || "#3b82f6";
+          const scrollRange = BRANCH_LEVELS[node.id] || { start: 0, end: 0 };
+          const isInitiallyVisible = scrollRange.start === 0 && scrollRange.end === 0;
+          const progress = getScrollProgress(node.id);
 
-          const fill = isInput ? (isDark ? "#121212" : "#e2e8f0") : (isDark ? "#0a0a0a" : "#ffffff");
-          const stroke = isActive ? nodeColor : (isDark ? "#333" : "#cbd5e1");
+          const fill = isDark ? "#0d0d0d" : "#f8f8f8";
+          const stroke = nodeColor;
 
-          return (
-            <motion.g
-              key={node.id}
-              initial={{ opacity: 0, scale: 0.95, y: 5 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: node.delay + 0.2 }}
-            >
-              {/* Node Background */}
-              <motion.rect
+          const baseOpacity = 0.75;
+          const currentOpacity = isInitiallyVisible ? baseOpacity : progress * baseOpacity;
+          const currentScale = isInitiallyVisible ? 1 : 0.9 + (0.1 * progress);
+
+          const nodeContent = (
+            <>
+              <rect
                 x={x - NODE_WIDTH / 2}
                 y={y - NODE_HEIGHT / 2}
                 width={NODE_WIDTH}
                 height={NODE_HEIGHT}
-                rx={12}
-                initial={{ fill: fill, stroke: stroke }}
-                animate={{
-                  fill: fill,
-                  stroke: stroke,
-                  strokeOpacity: isActive ? [0.3, 0.6, 0.3] : (isDark ? 0.1 : 0.5)
-                }}
-                strokeWidth={isActive ? 1.5 : 1}
-                transition={{
-                  fill: { duration: 0.5 },
-                  stroke: { duration: 0.5 },
-                  strokeOpacity: isActive ? { duration: 3, repeat: Infinity, ease: "easeInOut" } : { duration: 0.5 }
-                }}
+                rx={10}
+                fill={fill}
+                stroke={stroke}
+                strokeWidth={1}
+                strokeOpacity={0.4}
               />
 
-              {/* Node Content Skeleton */}
               <g transform={`translate(${x - NODE_WIDTH / 2}, ${y - NODE_HEIGHT / 2})`}>
-                {/* Header Icon(s) or Dot */}
                 {node.icons && node.icons.length > 0 ? (
                   node.icons.map((icon, index) => (
                     <image
                       key={index}
                       href={icon}
-                      x={12 + (index * 16)}
-                      y={10}
-                      height="14"
-                      width="14"
-                      className="transition-opacity duration-500"
-                      style={{ opacity: isActive ? 0.9 : 0.5 }}
+                      x={10 + (index * 14)}
+                      y={8}
+                      height="12"
+                      width="12"
+                      style={{ opacity: 0.6 }}
                     />
                   ))
                 ) : (
                   <circle
-                    cx={20}
-                    cy={18}
-                    r={3}
-                    className="transition-colors duration-500"
-                    fill={isInput ? (isDark ? "#444" : "#94a3b8") : (isActive ? nodeColor : (isDark ? "#333" : "#cbd5e1"))}
-                    fillOpacity={isActive ? 0.8 : (isDark ? 0.2 : 0.8)}
+                    cx={18}
+                    cy={14}
+                    r={2.5}
+                    fill={isDark ? "#444" : "#aaa"}
+                    fillOpacity={0.5}
                   />
                 )}
 
-                {/* Header Line */}
                 <rect
-                  x={node.icons && node.icons.length > 0 ? 12 + (node.icons.length * 16) + 8 : 36}
-                  y={16}
-                  width={isInput ? 30 : 40}
-                  height={3}
-                  rx={1.5}
-                  className="transition-all duration-500"
-                  fill={isInput ? (isDark ? "#333" : "#ddd") : (isActive ? nodeColor : (isDark ? "#1f1f1f" : "#f0f0f0"))}
-                  fillOpacity={isActive ? 0.4 : 0.3}
+                  x={node.icons && node.icons.length > 0 ? 10 + (node.icons.length * 14) + 6 : 32}
+                  y={12}
+                  width={isInput ? 25 : 35}
+                  height={2.5}
+                  rx={1.25}
+                  fill={isDark ? "#222" : "#ddd"}
+                  fillOpacity={0.6}
                 />
 
-                {/* Text Lines */}
                 <rect
-                  x={16} y={30} width={NODE_WIDTH - 32} height={3} rx={1.5}
-                  className="transition-all duration-500"
-                  fill={isInput ? (isDark ? "#222" : "#e5e5e5") : (isActive ? (isDark ? "#334155" : "#94a3b8") : (isDark ? "#1a1a1a" : "#f5f5f5"))}
-                  fillOpacity={0.6}
+                  x={12} y={26} width={NODE_WIDTH - 24} height={2.5} rx={1.25}
+                  fill={isDark ? "#1a1a1a" : "#e5e5e5"}
+                  fillOpacity={0.5}
                 />
                 <rect
-                  x={16} y={38} width={(NODE_WIDTH - 32) * 0.7} height={3} rx={1.5}
-                  className="transition-all duration-500"
-                  fill={isInput ? (isDark ? "#222" : "#e5e5e5") : (isActive ? (isDark ? "#334155" : "#94a3b8") : (isDark ? "#1a1a1a" : "#f5f5f5"))}
-                  fillOpacity={0.6}
+                  x={12} y={34} width={(NODE_WIDTH - 24) * 0.65} height={2.5} rx={1.25}
+                  fill={isDark ? "#1a1a1a" : "#e5e5e5"}
+                  fillOpacity={0.5}
                 />
               </g>
 
-              {/* Label */}
               {node.label && (
-                <motion.text
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.5 }}
-                  transition={{ delay: node.delay + 0.8 }}
+                <text
                   x={x}
-                  y={isInput ? y - NODE_HEIGHT / 2 - 8 : y + NODE_HEIGHT / 2 + 12}
+                  y={isInput ? y - NODE_HEIGHT / 2 - 6 : y + NODE_HEIGHT / 2 + 10}
                   textAnchor="middle"
-                  className="text-[10px] font-sans font-medium uppercase tracking-widest select-none"
-                  style={{ fill: isActive ? nodeColor : (isDark ? '#555' : '#999') }}
+                  className="text-[9px] font-sans font-medium uppercase tracking-widest select-none"
+                  style={{ fill: nodeColor }}
+                  opacity={0.5}
                 >
                   {node.label}
-                </motion.text>
+                </text>
               )}
-            </motion.g>
+            </>
+          );
+
+          if (isInitiallyVisible) {
+            return (
+              <motion.g
+                key={node.id}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: baseOpacity, scale: 1 }}
+                transition={{ duration: 1.5, delay: node.delay || 0, ease: "easeOut" }}
+                style={{ transformOrigin: `${x}px ${y}px` }}
+              >
+                {nodeContent}
+              </motion.g>
+            );
+          }
+
+          return (
+            <g
+              key={node.id}
+              opacity={currentOpacity}
+              style={{
+                transform: `scale(${currentScale})`,
+                transformOrigin: `${x}px ${y}px`,
+                transition: 'opacity 0.5s ease-out, transform 0.5s ease-out'
+              }}
+            >
+              {nodeContent}
+            </g>
           );
         })}
       </svg>
