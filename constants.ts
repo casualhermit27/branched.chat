@@ -33,8 +33,8 @@ export const TREE_NODES: Node[] = [
 ];
 
 export const HERO_COPY = {
-    title: "Think in Parallel.",
-    subtitle: "The first AI workspace for non-linear reasoning. Stop chatting. Start building trees.",
+    title: "The IDE for AI Conversations.",
+    subtitle: "Don't lose context by switching tabs. Branch your prompts, compare models side-by-side, and A/B test logic in a single spatial workspace.",
     cta: "Request Access",
     success: "You're on the list. Expect an invite soon.",
 };

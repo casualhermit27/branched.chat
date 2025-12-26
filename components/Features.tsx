@@ -9,38 +9,38 @@ interface FeaturesProps {
 const FEATURES = [
     {
         icon: GitBranch,
-        title: 'Branching',
-        description: 'Diverge your conversation at any point to explore different directions. Create parallel threads and compare outcomes side by side.',
+        title: 'Fork & Experiment',
+        description: 'Need to test a different prompt? Don\'t start over. Fork the conversation at any node to explore a new path without losing your original state.',
         video: null,
-        pastel: { bg: '#E9D5FF', icon: '#7C3AED' }, // Solid purple pastel
+        pastel: { bg: '#E9D5FF', icon: '#7C3AED' },
     },
     {
         icon: LayoutGrid,
-        title: 'Infinite Canvas',
-        description: 'Navigate your conversations spatially on an infinite canvas. Pan, zoom, and organize your thought process visually.',
+        title: 'Spatial Context',
+        description: 'Standard chat interfaces bury your history. Our infinite canvas lets you map out complex debugging sessions spatially. Zoom out to see the architecture.',
         video: null,
-        pastel: { bg: '#BBF7D0', icon: '#16A34A' }, // Solid green pastel
+        pastel: { bg: '#BBF7D0', icon: '#16A34A' },
     },
     {
         icon: GitMerge,
-        title: 'Synthesize',
-        description: 'Merge insights from multiple branches into unified summaries. Let AI help you find the best ideas across conversations.',
+        title: 'The Consensus Engine',
+        description: 'Stop guessing which model is right. Run GPT-4o and Claude on the same prompt, then merge the best parts of both into one golden result.',
         video: null,
-        pastel: { bg: '#A5F3FC', icon: '#0891B2' }, // Solid cyan pastel
+        pastel: { bg: '#A5F3FC', icon: '#0891B2' },
     },
     {
         icon: Key,
-        title: 'Your API Keys',
-        description: 'Use your own API keys and connect directly to providers. Full control over your usage, costs, and data.',
+        title: 'BYOK',
+        description: 'No middleman markup. Connect directly to OpenAI, Anthropic, or local Ollama instances. You pay provider prices, your data stays yours.',
         video: null,
-        pastel: { bg: '#FECACA', icon: '#DC2626' }, // Solid red/coral pastel
+        pastel: { bg: '#FECACA', icon: '#DC2626' },
     },
     {
         icon: Keyboard,
-        title: 'Keyboard-First',
-        description: 'Navigate, branch, switch models, and manage conversations entirely from your keyboard. Built for power users.',
+        title: 'Command Line Speed',
+        description: 'Designed for flow state. Open the command palette (⌘K), branch (⌘B), and switch models without your hands leaving the keyboard.',
         video: null,
-        pastel: { bg: '#FDE68A', icon: '#CA8A04' }, // Solid yellow pastel
+        pastel: { bg: '#FDE68A', icon: '#CA8A04' },
     },
 ];
 

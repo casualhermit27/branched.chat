@@ -1,9 +1,10 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Check } from 'lucide-react';
 import { WaitlistForm } from './WaitlistForm';
 import { HERO_COPY } from '../constants';
 import TreeVisualization from './TreeVisualization';
+import ComparisonView from './ComparisonView';
 import { Header } from './Header';
 
 interface HeroProps {
@@ -14,10 +15,155 @@ interface HeroProps {
 }
 
 const HIGHLIGHTS = [
-    'Multi-model conversations',
-    'Branch at any point',
-    'Your API keys',
+    'Compare models side-by-side',
+    'Fork at any node',
+    'Bring your own keys',
 ];
+
+// Visualization Panel with toggle between Tree and Comparison views
+const CYCLE_DURATION = 6000; // 6 seconds per view
+
+const VisualizationPanel: React.FC<{ isDark: boolean }> = ({ isDark }) => {
+    const [viewIndex, setViewIndex] = useState(0);
+    const [key, setKey] = useState(0); // For resetting animation
+
+    // Auto-cycle between views
+    React.useEffect(() => {
+        const timer = setTimeout(() => {
+            setViewIndex((prev) => (prev + 1) % 2);
+            setKey((prev) => prev + 1); // Reset animation
+        }, CYCLE_DURATION);
+        return () => clearTimeout(timer);
+    }, [viewIndex]);
+
+    const handleClick = (index: number) => {
+        setViewIndex(index);
+        setKey((prev) => prev + 1);
+    };
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, delay: 0.3 }}
+            className={`relative w-full h-full rounded-2xl overflow-hidden ${isDark
+                ? 'bg-[#070707] border border-white/[0.06]'
+                : 'bg-white border border-gray-200'
+                }`}
+        >
+            {/* CSS for border animation */}
+            <style>{`
+                @keyframes border-progress {
+                    0% { stroke-dashoffset: 280; }
+                    100% { stroke-dashoffset: 0; }
+                }
+                .border-anim {
+                    stroke-dasharray: 280;
+                    stroke-dashoffset: 280;
+                    animation: border-progress ${CYCLE_DURATION}ms linear forwards;
+                }
+            `}</style>
+
+            {/* Slide preview thumbnails - centered at top */}
+            <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20 flex gap-3">
+                {/* Tree view thumbnail */}
+                <button
+                    onClick={() => handleClick(0)}
+                    className={`relative w-20 h-14 rounded-lg overflow-visible transition-all ${viewIndex === 0 ? 'scale-105' : 'opacity-60 hover:opacity-100 hover:scale-105'
+                        }`}
+                >
+                    {/* Animated border */}
+                    {viewIndex === 0 && (
+                        <svg
+                            key={key}
+                            className="absolute -inset-0.5 w-[calc(100%+4px)] h-[calc(100%+4px)] pointer-events-none"
+                        >
+                            <rect
+                                x="1" y="1"
+                                width="calc(100% - 2px)" height="calc(100% - 2px)"
+                                rx="8" ry="8"
+                                fill="none"
+                                stroke={isDark ? '#fff' : '#3b82f6'}
+                                strokeWidth="2"
+                                className="border-anim"
+                            />
+                        </svg>
+                    )}
+                    <div className={`w-full h-full rounded-lg flex items-center justify-center ${isDark ? 'bg-[#111]' : 'bg-white border border-gray-200'
+                        }`}>
+                        <svg className={`w-8 h-8 ${isDark ? 'text-white/50' : 'text-gray-400'}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1}>
+                            <circle cx="12" cy="3" r="1.5" />
+                            <circle cx="6" cy="10" r="1.5" />
+                            <circle cx="18" cy="10" r="1.5" />
+                            <circle cx="4" cy="17" r="1.5" />
+                            <circle cx="9" cy="17" r="1.5" />
+                            <circle cx="15" cy="17" r="1.5" />
+                            <circle cx="20" cy="17" r="1.5" />
+                            <path d="M12 4.5v2M12 6.5L6 8.5M12 6.5l6 2M6 11.5l-2 4M6 11.5l3 4M18 11.5l-3 4M18 11.5l2 4" />
+                        </svg>
+                    </div>
+                </button>
+
+                {/* Compare view thumbnail */}
+                <button
+                    onClick={() => handleClick(1)}
+                    className={`relative w-20 h-14 rounded-lg overflow-visible transition-all ${viewIndex === 1 ? 'scale-105' : 'opacity-60 hover:opacity-100 hover:scale-105'
+                        }`}
+                >
+                    {/* Animated border */}
+                    {viewIndex === 1 && (
+                        <svg
+                            key={key}
+                            className="absolute -inset-0.5 w-[calc(100%+4px)] h-[calc(100%+4px)] pointer-events-none"
+                        >
+                            <rect
+                                x="1" y="1"
+                                width="calc(100% - 2px)" height="calc(100% - 2px)"
+                                rx="8" ry="8"
+                                fill="none"
+                                stroke={isDark ? '#fff' : '#3b82f6'}
+                                strokeWidth="2"
+                                className="border-anim"
+                            />
+                        </svg>
+                    )}
+                    <div className={`w-full h-full rounded-lg flex items-center justify-center gap-1 p-2 ${isDark ? 'bg-[#111]' : 'bg-white border border-gray-200'
+                        }`}>
+                        <div className={`flex-1 h-full rounded ${isDark ? 'bg-white/15' : 'bg-gray-100'}`} />
+                        <div className={`flex-1 h-full rounded ${isDark ? 'bg-white/15' : 'bg-gray-100'}`} />
+                    </div>
+                </button>
+            </div>
+
+            {/* Main view area - full */}
+            <AnimatePresence mode="wait">
+                {viewIndex === 0 ? (
+                    <motion.div
+                        key="tree"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.25 }}
+                        className="w-full h-full"
+                    >
+                        <TreeVisualization isDark={isDark} />
+                    </motion.div>
+                ) : (
+                    <motion.div
+                        key="comparison"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.25 }}
+                        className="w-full h-full"
+                    >
+                        <ComparisonView isDark={isDark} />
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </motion.div>
+    );
+};
 
 export const Hero: React.FC<HeroProps> = ({ onWatchDemo, isDark, onOpenAbout, toggleTheme }) => {
     return (
@@ -30,18 +176,36 @@ export const Hero: React.FC<HeroProps> = ({ onWatchDemo, isDark, onOpenAbout, to
                 {/* Center-aligned Content */}
                 <div className="flex-1 flex flex-col items-center justify-center mt-4">
                     <div className="w-full max-w-xl text-center">
-                        {/* Badge */}
+                        {/* Badge with animated blob gradient */}
                         <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, delay: 0.1 }}
-                            className={`inline-block mb-6 px-4 py-2 rounded-full text-[11px] uppercase tracking-[0.2em] font-medium border ${isDark
-                                ? 'border-white/10 text-gray-400 bg-white/5'
-                                : 'border-gray-300 text-gray-600 bg-white'
-                                }`}
+                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                            className="relative inline-block mb-6 px-5 py-2.5 rounded-full text-[11px] uppercase tracking-[0.2em] font-semibold text-white overflow-hidden"
+                            style={{
+                                background: 'linear-gradient(135deg, #fbbf24, #f97316, #ec4899, #fbbf24)',
+                                backgroundSize: '400% 400%',
+                                animation: 'blob-gradient 8s ease infinite',
+                            }}
                         >
-                            Coming Soon
+                            {/* Grain texture */}
+                            <span
+                                className="absolute inset-0 opacity-[0.1] pointer-events-none mix-blend-overlay"
+                                style={{
+                                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+                                }}
+                            />
+                            <span className="relative">Coming Soon</span>
                         </motion.div>
+
+                        <style>{`
+                            @keyframes blob-gradient {
+                                0%, 100% { background-position: 0% 50%; }
+                                25% { background-position: 100% 0%; }
+                                50% { background-position: 100% 100%; }
+                                75% { background-position: 0% 100%; }
+                            }
+                        `}</style>
 
                         {/* Main Title */}
                         <motion.h1
@@ -142,12 +306,21 @@ export const Hero: React.FC<HeroProps> = ({ onWatchDemo, isDark, onOpenAbout, to
                                     <Play className="w-4 h-4 fill-current ml-0.5 relative z-10" />
                                 </motion.span>
 
-                                <span className="relative z-10">Watch demo</span>
+                                {/* Text shifts left on hover */}
+                                <motion.span
+                                    className="relative z-10"
+                                    variants={{
+                                        hover: { x: -4 },
+                                    }}
+                                    transition={{ duration: 0.2 }}
+                                >
+                                    See the Workflow
+                                </motion.span>
 
                                 {/* Arrow indicator on hover */}
                                 <motion.span
                                     className="relative z-10"
-                                    initial={{ opacity: 0, x: -5 }}
+                                    initial={{ opacity: 0, x: -8 }}
                                     variants={{
                                         hover: { opacity: 1, x: 0 }
                                     }}
@@ -173,19 +346,9 @@ export const Hero: React.FC<HeroProps> = ({ onWatchDemo, isDark, onOpenAbout, to
                 </div>
             </div>
 
-            {/* Right Half - Tree Animation Container */}
+            {/* Right Half - Visualization Container with Toggle */}
             <div className={`hidden lg:flex w-1/2 p-5 items-stretch ${isDark ? 'bg-[#0a0a0a]' : 'bg-[#f8f9fa]'}`}>
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.98 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 1, delay: 0.3 }}
-                    className={`relative w-full rounded-2xl overflow-hidden ${isDark
-                        ? 'bg-[#070707] border border-white/[0.06]'
-                        : 'bg-white border border-gray-200'
-                        }`}
-                >
-                    <TreeVisualization isDark={isDark} />
-                </motion.div>
+                <VisualizationPanel isDark={isDark} />
             </div>
         </section>
     );

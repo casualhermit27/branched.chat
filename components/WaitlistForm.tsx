@@ -15,7 +15,7 @@ export const WaitlistForm: React.FC<WaitlistFormProps> = ({ isDark = true }) => 
     const [placeholder, setPlaceholder] = useState('');
 
     useEffect(() => {
-        const text = "enter your email...";
+        const text = "developer@localhost";
         let currentIndex = 0;
         const interval = setInterval(() => {
             if (currentIndex <= text.length) {
