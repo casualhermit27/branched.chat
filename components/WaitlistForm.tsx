@@ -28,34 +28,45 @@ export const WaitlistForm: React.FC<WaitlistFormProps> = ({ isDark = true }) => 
         return () => clearInterval(interval);
     }, []);
 
-    // Check if email already exists in waitlist
+    // Check if email already exists in waitlist (Local check only)
     const checkEmailExists = async (emailToCheck: string): Promise<boolean> => {
-        try {
-            // Simulate API call - replace with real API
-            await new Promise(resolve => setTimeout(resolve, 800));
-
-            // Simulate: check localStorage for existing emails (for demo purposes)
-            const existingEmails = JSON.parse(localStorage.getItem('waitlist_emails') || '[]');
-            return existingEmails.includes(emailToCheck.toLowerCase());
-        } catch (error) {
-            console.error('Error checking email:', error);
-            return false; // On error, allow submission (fail open)
-        }
+        // Check localStorage for recently submitted emails to prevent immediate duplicates
+        const existingEmails = JSON.parse(localStorage.getItem('waitlist_emails') || '[]');
+        return existingEmails.includes(emailToCheck.toLowerCase());
     };
 
-    // Add email to waitlist
+    // Add email to waitlist via FormSubmit
     const addToWaitlist = async (emailToAdd: string): Promise<boolean> => {
         try {
-            // Simulate API call - replace with real API
-            await new Promise(resolve => setTimeout(resolve, 700));
+            // TODO: REPLACE THIS WITH YOUR EMAIL ADDRESS
+            // The first time you submit, you will receive an activation email at this address.
+            // Using an alias (like +waitlist) ensures FormSubmit treats this as a distinct form from your localhost tests.
+            const TARGET_EMAIL = "branched.chat+waitlist@gmail.com";
 
-            // Simulate: store in localStorage (for demo purposes)
-            const existingEmails = JSON.parse(localStorage.getItem('waitlist_emails') || '[]');
-            if (!existingEmails.includes(emailToAdd.toLowerCase())) {
-                existingEmails.push(emailToAdd.toLowerCase());
-                localStorage.setItem('waitlist_emails', JSON.stringify(existingEmails));
+            const response = await fetch(`https://formsubmit.co/ajax/${TARGET_EMAIL}`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: emailToAdd,
+                    _subject: "New Waitlist Signup - Branched.chat", // Custom subject
+                    _template: "table",
+                    _captcha: "false" // Disable captcha for cleaner UI, enable if spam occurs
+                })
+            });
+
+            if (response.ok) {
+                // Store in localStorage to prevent duplicate submissions from this browser
+                const existingEmails = JSON.parse(localStorage.getItem('waitlist_emails') || '[]');
+                if (!existingEmails.includes(emailToAdd.toLowerCase())) {
+                    existingEmails.push(emailToAdd.toLowerCase());
+                    localStorage.setItem('waitlist_emails', JSON.stringify(existingEmails));
+                }
+                return true;
             }
-            return true;
+            return false;
         } catch (error) {
             console.error('Error adding email:', error);
             return false;
