@@ -43,22 +43,20 @@ export const WaitlistForm: React.FC<WaitlistFormProps> = ({ isDark = true }) => 
             // Using an alias (like +waitlist) ensures FormSubmit treats this as a distinct form from your localhost tests.
             const TARGET_EMAIL = "branched.chat+waitlist@gmail.com";
 
+            // Format as FormData - this is much more reliable for FormSubmit than JSON
+            const formData = new FormData();
+            formData.append("email", emailToAdd);
+            formData.append("_subject", "New Waitlist Signup");
+            formData.append("_template", "table");
+            formData.append("_captcha", "false");
+
             const response = await fetch(`https://formsubmit.co/ajax/${TARGET_EMAIL}`, {
                 method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    email: emailToAdd,
-                    _subject: "New Waitlist Signup - Branched.chat", // Custom subject
-                    _template: "table",
-                    _captcha: "false" // Disable captcha for cleaner UI, enable if spam occurs
-                })
+                body: formData
             });
 
             if (response.ok) {
-                // Store in localStorage to prevent duplicate submissions from this browser
+                // Store in localStorage
                 const existingEmails = JSON.parse(localStorage.getItem('waitlist_emails') || '[]');
                 if (!existingEmails.includes(emailToAdd.toLowerCase())) {
                     existingEmails.push(emailToAdd.toLowerCase());
@@ -66,6 +64,7 @@ export const WaitlistForm: React.FC<WaitlistFormProps> = ({ isDark = true }) => 
                 }
                 return true;
             }
+            console.error("FormSubmit Error:", await response.text());
             return false;
         } catch (error) {
             console.error('Error adding email:', error);
