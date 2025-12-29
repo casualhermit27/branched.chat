@@ -100,7 +100,9 @@ const UserMsg: React.FC<{ text: string; isDark: boolean; delay: number }> = ({ t
         transition={{ duration: 0.3, delay }}
         className="flex justify-end"
     >
-        <div className={`max-w-[90%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${isDark ? 'bg-white/10 text-white' : 'bg-blue-600 text-white'
+        <div className={`max-w-[90%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${isDark
+            ? 'bg-white/10 text-white'
+            : 'bg-gray-900 text-white'
             }`}>
             {text}
         </div>
@@ -120,7 +122,7 @@ const AIMsg: React.FC<{ children: React.ReactNode; isDark: boolean; delay: numbe
 
 const ComparisonView: React.FC<ComparisonViewProps> = ({ isDark = true }) => {
     return (
-        <div className="relative w-full h-full flex flex-col pt-20 px-4 pb-4">
+        <div className="relative w-full h-full flex flex-col pt-24 px-4 pb-4">
             {/* Two panels */}
             <div className="flex-1 flex gap-4 min-h-0">
                 {/* GPT-4o Panel */}

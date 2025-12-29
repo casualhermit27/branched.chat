@@ -1,146 +1,161 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { GitBranch, LayoutGrid, GitMerge, Key, Keyboard } from 'lucide-react';
+import { GitBranch, LayoutGrid, GitMerge, Key, Keyboard, Brain, LucideIcon } from 'lucide-react';
 
 interface FeaturesProps {
     isDark: boolean;
 }
 
-const FEATURES = [
+interface Feature {
+    icon: LucideIcon;
+    title: string;
+    description: React.ReactNode;
+    image?: string | null;
+    note?: string;
+}
+
+const FEATURES: Feature[] = [
+    {
+        icon: Brain,
+        title: 'Top-Tier Models',
+        description: <>Access <em>GPT-4o</em>, <em>Claude 3.5 Sonnet</em>, <em>Gemini Pro</em> — switch between them <strong>mid-conversation</strong>.</>,
+        image: '/features/models.png',
+        note: '* Image generation models coming soon',
+    },
     {
         icon: GitBranch,
         title: 'Fork & Experiment',
-        description: 'Need to test a different prompt? Don\'t start over. Fork the conversation at any node to explore a new path without losing your original state.',
-        video: null,
-        pastel: { bg: '#E9D5FF', icon: '#7C3AED' },
+        description: <>Branch <em>any</em> conversation. Explore alternatives without losing your <strong>original thread</strong>.</>,
+        image: '/features/branches.png',
     },
     {
         icon: LayoutGrid,
         title: 'Spatial Context',
-        description: 'Standard chat interfaces bury your history. Our infinite canvas lets you map out complex debugging sessions spatially. Zoom out to see the architecture.',
-        video: null,
-        pastel: { bg: '#BBF7D0', icon: '#16A34A' },
+        description: <>An <em>infinite canvas</em> for your AI sessions. See <strong>everything</strong> at once.</>,
     },
     {
         icon: GitMerge,
-        title: 'The Consensus Engine',
-        description: 'Stop guessing which model is right. Run GPT-4o and Claude on the same prompt, then merge the best parts of both into one golden result.',
-        video: null,
-        pastel: { bg: '#A5F3FC', icon: '#0891B2' },
+        title: 'Consensus Engine',
+        description: <>Query <em>multiple models</em> simultaneously. Compare and <strong>merge</strong> their answers.</>,
     },
     {
         icon: Key,
         title: 'BYOK',
-        description: 'No middleman markup. Connect directly to OpenAI, Anthropic, or local Ollama instances. You pay provider prices, your data stays yours.',
-        video: null,
-        pastel: { bg: '#FECACA', icon: '#DC2626' },
+        description: <>Bring your own API keys. <strong>Zero markup</strong> on token costs.</>,
     },
     {
         icon: Keyboard,
-        title: 'Command Line Speed',
-        description: 'Designed for flow state. Open the command palette (⌘K), branch (⌘B), and switch models without your hands leaving the keyboard.',
-        video: null,
-        pastel: { bg: '#FDE68A', icon: '#CA8A04' },
+        title: 'Keyboard First',
+        description: <>Command palette, <em>vim-style</em> navigation, <strong>zero-mouse</strong> workflows.</>,
     },
 ];
-
-const FeatureRow: React.FC<{
-    feature: typeof FEATURES[0];
-    isDark: boolean;
-    index: number;
-    reversed: boolean;
-}> = ({ feature, isDark, index, reversed }) => {
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: "-100px" });
-    const Icon = feature.icon;
-
-    return (
-        <motion.div
-            ref={ref}
-            initial={{ opacity: 0, y: 40 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className={`flex flex-col ${reversed ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-0 rounded-2xl overflow-hidden`}
-        >
-            {/* Content side */}
-            <div className={`w-full lg:w-1/2 p-10 lg:p-14 flex flex-col justify-between min-h-[320px] lg:min-h-[400px] ${isDark ? 'bg-[#111]' : 'bg-[#eaeaea]'}`}>
-                {/* Top: Icon + Title */}
-                <div className="flex items-center gap-4">
-                    <Icon className={`w-8 h-8 ${isDark ? 'text-white' : 'text-gray-900'}`} strokeWidth={1.5} />
-                    <h3 className={`text-2xl lg:text-3xl font-medium tracking-tight ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                        {feature.title}
-                    </h3>
-                </div>
-
-                {/* Bottom: Description */}
-                <p className={`text-base lg:text-lg leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                    {feature.description}
-                </p>
-            </div>
-
-            {/* Video side */}
-            <div className={`relative w-full lg:w-1/2 min-h-[280px] lg:min-h-[400px] ${isDark ? 'bg-[#0c0c0c]' : 'bg-[#1a1a1a]'}`}>
-                {feature.video ? (
-                    <video
-                        src={feature.video}
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        className="absolute inset-0 w-full h-full object-cover"
-                    />
-                ) : (
-                    <>
-                        {/* Grid pattern */}
-                        <div
-                            className="absolute inset-0 opacity-[0.04]"
-                            style={{
-                                backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)',
-                                backgroundSize: '20px 20px'
-                            }}
-                        />
-
-                        {/* Placeholder */}
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <Icon className="w-16 h-16 text-white/[0.06]" strokeWidth={0.5} />
-                        </div>
-                    </>
-                )}
-            </div>
-        </motion.div>
-    );
-};
 
 export const Features: React.FC<FeaturesProps> = ({ isDark }) => {
     const headerRef = useRef(null);
     const isHeaderInView = useInView(headerRef, { once: true, margin: "-80px" });
 
     return (
-        <div className={`relative w-full py-20 lg:py-28 ${isDark ? 'bg-[#0a0a0a]' : 'bg-[#f5f5f5]'}`}>
-            {/* Header */}
-            <motion.div
-                ref={headerRef}
-                initial={{ opacity: 0, y: 20 }}
-                animate={isHeaderInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                transition={{ duration: 0.8 }}
-                className="text-center px-6 mb-14 lg:mb-20"
-            >
-                <h2 className={`text-4xl lg:text-5xl font-light tracking-tight ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                    Features
-                </h2>
-            </motion.div>
+        <div className={`relative w-full py-24 lg:py-40 ${isDark ? 'bg-[#0a0a0a]' : 'bg-white'}`}>
+            <div className="max-w-[1400px] mx-auto px-6">
 
-            {/* Feature rows - alternating */}
-            <div className="max-w-6xl mx-auto px-6 space-y-5">
-                {FEATURES.map((feature, index) => (
-                    <FeatureRow
-                        key={feature.title}
-                        feature={feature}
-                        isDark={isDark}
-                        index={index}
-                        reversed={index % 2 === 1}
-                    />
-                ))}
+                {/* Header */}
+                <motion.div
+                    ref={headerRef}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={isHeaderInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                    transition={{ duration: 0.8 }}
+                    className="mb-20 lg:mb-28"
+                >
+                    <h2 className={`font-display text-4xl lg:text-5xl font-semibold tracking-tight ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                        Features
+                    </h2>
+                </motion.div>
+
+                {/* Feature Cards */}
+                <div className="space-y-8">
+                    {FEATURES.map((feature, index) => {
+                        const Icon = feature.icon;
+                        const ref = useRef(null);
+                        const isInView = useInView(ref, { once: true, margin: "-50px" });
+
+                        return (
+                            <motion.div
+                                key={feature.title}
+                                ref={ref}
+                                initial={{ opacity: 0, y: 40 }}
+                                animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+                                transition={{ duration: 0.6, ease: "easeOut" }}
+                                className={`
+                                    relative rounded-3xl overflow-hidden
+                                    border ${isDark ? 'border-white/[0.08]' : 'border-black/[0.08]'}
+                                `}
+                            >
+                                <div className="flex flex-col lg:flex-row items-stretch p-10 lg:p-14 gap-10 lg:gap-16 min-h-[400px]">
+
+                                    {/* Left: Text Content */}
+                                    <div className="lg:w-2/5 flex flex-col justify-between">
+                                        {/* Top: Icon + Title side by side */}
+                                        <div className="flex items-center gap-4">
+                                            <Icon
+                                                className={`w-7 h-7 flex-shrink-0 ${isDark ? 'text-white/70' : 'text-gray-700'}`}
+                                                strokeWidth={1.5}
+                                            />
+                                            <h3 className={`font-display text-2xl lg:text-3xl font-semibold tracking-tight ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                                {feature.title}
+                                            </h3>
+                                        </div>
+
+                                        {/* Bottom: Description */}
+                                        <div className="mt-auto pt-8">
+                                            <p className={`text-base lg:text-lg leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                                                {feature.description}
+                                            </p>
+
+                                            {/* Note */}
+                                            {feature.note && (
+                                                <p className={`mt-3 text-sm font-medium ${isDark ? 'text-violet-400' : 'text-violet-600'}`}>
+                                                    {feature.note}
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* Right: Image or Placeholder */}
+                                    <div className="lg:w-3/5">
+                                        <div className={`
+                                            relative aspect-[16/10] rounded-2xl overflow-hidden
+                                            ${isDark ? 'bg-[#111]' : 'bg-gray-100'}
+                                        `}>
+                                            {feature.image ? (
+                                                <img
+                                                    src={feature.image}
+                                                    alt={feature.title}
+                                                    className="absolute inset-0 w-full h-full object-cover"
+                                                />
+                                            ) : (
+                                                /* Placeholder with icon */
+                                                <div className="absolute inset-0 flex items-center justify-center">
+                                                    <div
+                                                        className="absolute inset-0 opacity-[0.03]"
+                                                        style={{
+                                                            backgroundImage: `radial-gradient(${isDark ? '#fff' : '#000'} 1px, transparent 1px)`,
+                                                            backgroundSize: '24px 24px',
+                                                        }}
+                                                    />
+                                                    <Icon
+                                                        className={`w-20 h-20 ${isDark ? 'text-white/[0.06]' : 'text-black/[0.06]'}`}
+                                                        strokeWidth={1}
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        );
+                    })}
+                </div>
+
             </div>
         </div>
     );

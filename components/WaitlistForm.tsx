@@ -129,7 +129,7 @@ export const WaitlistForm: React.FC<WaitlistFormProps> = ({ isDark = true }) => 
                         <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500/10 text-green-400 mb-3">
                             <CheckCircle2 className="w-6 h-6" />
                         </div>
-                        <span className={`font-medium mb-1 ${isDark ? 'text-white' : 'text-gray-900'}`}>Welcome aboard</span>
+                        <span className={`font-display font-semibold mb-1 ${isDark ? 'text-white' : 'text-gray-900'}`}>Welcome aboard</span>
                         <span className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{message}</span>
                     </motion.div>
                 ) : (

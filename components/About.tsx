@@ -26,7 +26,7 @@ export const About: React.FC = () => {
                 {/* Window Content */}
                 <div className="p-8 md:p-12 space-y-8 text-gray-300 font-light leading-relaxed">
                     <div className="space-y-4">
-                        <h2 className="text-2xl text-white font-normal">Building the future of thought.</h2>
+                        <h2 className="font-display text-2xl text-white font-medium">Building the future of thought.</h2>
                         <p>
                             Branched is an experiment in non-linear reasoning. We believe that human thought isn't a single stream of tokens, but a branching tree of possibilities.
                         </p>
@@ -36,7 +36,7 @@ export const About: React.FC = () => {
                     </div>
 
                     <div className="space-y-4 pt-4 border-t border-white/5">
-                        <h3 className="text-sm font-medium text-white uppercase tracking-wider">The Stack</h3>
+                        <h3 className="font-display text-sm font-semibold text-white uppercase tracking-wider">The Stack</h3>
                         <div className="flex flex-wrap gap-2">
                             {['React', 'TypeScript', 'Vite', 'Tailwind', 'Framer Motion'].map((tech) => (
                                 <span key={tech} className="px-3 py-1 text-xs rounded-full bg-white/5 border border-white/10 text-gray-400">

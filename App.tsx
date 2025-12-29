@@ -4,6 +4,7 @@ import { Features } from './components/Features';
 import { ModelTicker } from './components/ModelTicker';
 import { AboutSidebar } from './components/AboutSidebar';
 import { VideoModal } from './components/VideoModal';
+import { Footer } from './components/Footer';
 
 function App() {
     const [isAboutOpen, setIsAboutOpen] = useState(false);
@@ -23,7 +24,7 @@ function App() {
     return (
         <div className={`relative min-h-screen transition-colors duration-700 ease-in-out overflow-x-hidden font-sans ${isDark ? 'bg-[#0a0a0a] text-white selection:bg-blue-500/30' : 'bg-[#fafafa] text-gray-900 selection:bg-blue-500/20'}`}>
             {/* Overlays */}
-            <AboutSidebar isOpen={isAboutOpen} onClose={() => setIsAboutOpen(false)} />
+            <AboutSidebar isOpen={isAboutOpen} onClose={() => setIsAboutOpen(false)} isDark={isDark} />
             <VideoModal isOpen={isVideoOpen} onClose={() => setIsVideoOpen(false)} videoId="dQw4w9WgXcQ" />
 
             {/* Content */}
@@ -43,11 +44,7 @@ function App() {
                 <Features isDark={isDark} />
 
                 {/* Footer */}
-                <footer className={`py-16 text-center ${isDark ? 'bg-[#0a0a0a]' : 'bg-[#fafafa]'}`}>
-                    <p className={`text-[10px] uppercase tracking-[0.2em] ${isDark ? 'text-white/15' : 'text-black/15'}`}>
-                        © 2025 branched.chat
-                    </p>
-                </footer>
+                <Footer isDark={isDark} />
             </div>
 
             <style dangerouslySetInnerHTML={{
