@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { GitBranch, LayoutGrid, GitMerge, Key, Keyboard, Brain, LucideIcon } from 'lucide-react';
+import { GitBranch, LayoutGrid, GitMerge, Key, Keyboard, Brain, MousePointerClick, LucideIcon } from 'lucide-react';
 
 interface FeaturesProps {
     isDark: boolean;
@@ -30,8 +30,16 @@ const FEATURES: Feature[] = [
     },
     {
         icon: LayoutGrid,
-        title: 'Spatial Context',
-        description: <>An <em>infinite canvas</em> for your AI sessions. See <strong>everything</strong> at once.</>,
+        title: 'Compare Side-by-Side',
+        description: <>No more copy-pasting between tabs. Visualize differences in <em>tone</em>, <em>logic</em>, and <em>accuracy</em> instantly. The best answer isn't always the first one—it's the <strong>right one</strong>.</>,
+        image: '/features/compare.png',
+    },
+    {
+        icon: MousePointerClick,
+        title: 'Branch from Text',
+        description: <>Select any text and <em>ask questions</em> about it. Branch out from <strong>any point</strong> in the conversation to explore deeper.
+        </>,
+        image: '/features/text branch.png',
     },
     {
         icon: GitMerge,
@@ -56,7 +64,7 @@ export const Features: React.FC<FeaturesProps> = ({ isDark }) => {
 
     return (
         <div className={`relative w-full py-24 lg:py-40 ${isDark ? 'bg-[#0a0a0a]' : 'bg-white'}`}>
-            <div className="max-w-[1400px] mx-auto px-6">
+            <div className="max-w-[1600px] mx-auto px-6 lg:px-10">
 
                 {/* Header */}
                 <motion.div
@@ -72,7 +80,7 @@ export const Features: React.FC<FeaturesProps> = ({ isDark }) => {
                 </motion.div>
 
                 {/* Feature Cards */}
-                <div className="space-y-8">
+                <div className="space-y-10 lg:space-y-12">
                     {FEATURES.map((feature, index) => {
                         const Icon = feature.icon;
                         const ref = useRef(null);
@@ -90,7 +98,7 @@ export const Features: React.FC<FeaturesProps> = ({ isDark }) => {
                                     border ${isDark ? 'border-white/[0.08]' : 'border-black/[0.08]'}
                                 `}
                             >
-                                <div className="flex flex-col lg:flex-row items-stretch p-10 lg:p-14 gap-10 lg:gap-16 min-h-[400px]">
+                                <div className="flex flex-col lg:flex-row items-stretch p-12 lg:p-16 gap-12 lg:gap-20 min-h-[480px] lg:min-h-[520px]">
 
                                     {/* Left: Text Content */}
                                     <div className="lg:w-2/5 flex flex-col justify-between">
@@ -123,7 +131,7 @@ export const Features: React.FC<FeaturesProps> = ({ isDark }) => {
                                     {/* Right: Image or Placeholder */}
                                     <div className="lg:w-3/5">
                                         <div className={`
-                                            relative aspect-[16/10] rounded-2xl overflow-hidden
+                                            relative aspect-[16/8] rounded-2xl overflow-hidden
                                             ${isDark ? 'bg-[#111]' : 'bg-gray-100'}
                                         `}>
                                             {feature.image ? (
@@ -135,13 +143,6 @@ export const Features: React.FC<FeaturesProps> = ({ isDark }) => {
                                             ) : (
                                                 /* Placeholder with icon */
                                                 <div className="absolute inset-0 flex items-center justify-center">
-                                                    <div
-                                                        className="absolute inset-0 opacity-[0.03]"
-                                                        style={{
-                                                            backgroundImage: `radial-gradient(${isDark ? '#fff' : '#000'} 1px, transparent 1px)`,
-                                                            backgroundSize: '24px 24px',
-                                                        }}
-                                                    />
                                                     <Icon
                                                         className={`w-20 h-20 ${isDark ? 'text-white/[0.06]' : 'text-black/[0.06]'}`}
                                                         strokeWidth={1}
