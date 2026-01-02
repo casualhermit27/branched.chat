@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { GitBranch, LayoutGrid, GitMerge, Key, Keyboard, Brain, MousePointerClick, LucideIcon } from 'lucide-react';
+import { GitBranch, LayoutGrid, Sparkles, Key, Keyboard, Brain, MousePointerClick, LucideIcon } from 'lucide-react';
 
 interface FeaturesProps {
     isDark: boolean;
@@ -42,9 +42,10 @@ const FEATURES: Feature[] = [
         image: '/features/text branch.png',
     },
     {
-        icon: GitMerge,
-        title: 'Consensus Engine',
-        description: <>Query <em>multiple models</em> simultaneously. Compare and <strong>merge</strong> their answers.</>,
+        icon: Sparkles,
+        title: 'Synthesize',
+        description: <>Reviewing multiple answers is <em>time-consuming</em>. Select your top responses and let a <strong>Judge Model</strong> (e.g. <em>GPT-4o</em>) compile them into one <strong>finalized, ready-to-use output</strong> instantly.</>,
+        image: '/features/synth.png',
     },
     {
         icon: Key,
@@ -101,7 +102,7 @@ export const Features: React.FC<FeaturesProps> = ({ isDark }) => {
                                 <div className="flex flex-col lg:flex-row items-stretch p-12 lg:p-16 gap-12 lg:gap-20 min-h-[480px] lg:min-h-[520px]">
 
                                     {/* Left: Text Content */}
-                                    <div className="lg:w-2/5 flex flex-col justify-between">
+                                    <div className="lg:w-1/3 flex flex-col justify-between">
                                         {/* Top: Icon + Title side by side */}
                                         <div className="flex items-center gap-4">
                                             <Icon
@@ -129,7 +130,7 @@ export const Features: React.FC<FeaturesProps> = ({ isDark }) => {
                                     </div>
 
                                     {/* Right: Image or Placeholder */}
-                                    <div className="lg:w-3/5">
+                                    <div className="lg:w-2/3">
                                         <div className={`
                                             relative aspect-[16/8] rounded-2xl overflow-hidden
                                             ${isDark ? 'bg-[#111]' : 'bg-gray-100'}
