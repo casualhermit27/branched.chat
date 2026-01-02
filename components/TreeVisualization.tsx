@@ -54,14 +54,25 @@ const TreeVisualization: React.FC<TreeVisualizationProps> = ({ isDark = true }) 
         return () => observer.disconnect();
     }, []);
 
-    const padding = { x: 30, y: 50 };
+    // Responsive node sizing based on container width
+    // Small: < 400px (very narrow), Medium: 400-850px (tablets, laptops), Large: > 850px (large monitors)
+    const screenSize = size.width < 400 ? 'small' : size.width < 850 ? 'medium' : 'large';
+
+    const nodeWidth = screenSize === 'small' ? 65 : screenSize === 'medium' ? 85 : NODE_WIDTH;
+    const nodeHeight = screenSize === 'small' ? 36 : screenSize === 'medium' ? 42 : NODE_HEIGHT;
+    const isSmallScreen = screenSize !== 'large'; // For other responsive values
+
+    const padding = {
+        x: screenSize === 'small' ? 10 : screenSize === 'medium' ? 15 : 30,
+        y: screenSize === 'small' ? 25 : screenSize === 'medium' ? 32 : 50
+    };
     const getX = (percent: number) => padding.x + ((percent / 100) * (size.width - padding.x * 2));
     const getY = (percent: number) => padding.y + ((percent / 100) * (size.height - padding.y * 2));
 
     // Smart path - straight if same X, orthogonal otherwise
     const getPath = (x1: number, y1: number, x2: number, y2: number) => {
-        const startY = y1 + NODE_HEIGHT / 2;
-        const endY = y2 - NODE_HEIGHT / 2;
+        const startY = y1 + nodeHeight / 2;
+        const endY = y2 - nodeHeight / 2;
 
         if (Math.abs(x1 - x2) < 5) {
             return `M ${x1} ${startY} L ${x1} ${endY}`;
@@ -112,7 +123,7 @@ const TreeVisualization: React.FC<TreeVisualizationProps> = ({ isDark = true }) 
                                 key={`link-${parent.id}-${node.id}`}
                                 d={getPath(x1, y1, x2, y2)}
                                 fill="none"
-                                strokeWidth={2}
+                                strokeWidth={isSmallScreen ? 1.5 : 2}
                                 strokeLinecap="round"
                                 stroke={node.color}
                                 initial={{ pathLength: 0, opacity: 0 }}
@@ -131,8 +142,12 @@ const TreeVisualization: React.FC<TreeVisualizationProps> = ({ isDark = true }) 
                         const x = getX(node.x);
                         const y = getY(node.y);
                         const isInput = node.type === 'input';
-                        const labelY = isInput ? y - NODE_HEIGHT / 2 - 10 : y + NODE_HEIGHT / 2 + 14;
-                        const labelWidth = node.label.length * 7 + 14;
+                        const labelOffset = screenSize === 'small' ? 5 : screenSize === 'medium' ? 6 : 10;
+                        const labelOffsetBelow = screenSize === 'small' ? 7 : screenSize === 'medium' ? 9 : 14;
+                        const labelY = isInput ? y - nodeHeight / 2 - labelOffset : y + nodeHeight / 2 + labelOffsetBelow;
+                        const labelCharWidth = screenSize === 'small' ? 3.5 : screenSize === 'medium' ? 4.5 : 7;
+                        const labelPadding = screenSize === 'small' ? 6 : screenSize === 'medium' ? 8 : 14;
+                        const labelWidth = node.label.length * labelCharWidth + labelPadding;
 
                         return (
                             <motion.rect
@@ -155,6 +170,10 @@ const TreeVisualization: React.FC<TreeVisualizationProps> = ({ isDark = true }) 
                         const x = getX(node.x);
                         const y = getY(node.y);
                         const isInput = node.type === 'input';
+                        const iconSize = screenSize === 'small' ? 7 : screenSize === 'medium' ? 9 : 14;
+                        const iconSpacing = screenSize === 'small' ? 9 : screenSize === 'medium' ? 11 : 16;
+                        const labelOffset = screenSize === 'small' ? 5 : screenSize === 'medium' ? 6 : 10;
+                        const labelOffsetBelow = screenSize === 'small' ? 7 : screenSize === 'medium' ? 9 : 14;
 
                         const fill = isDark ? "#0a0a0a" : "#ffffff";
 
@@ -170,55 +189,63 @@ const TreeVisualization: React.FC<TreeVisualizationProps> = ({ isDark = true }) 
                                 }}
                             >
                                 <rect
-                                    x={x - NODE_WIDTH / 2}
-                                    y={y - NODE_HEIGHT / 2}
-                                    width={NODE_WIDTH}
-                                    height={NODE_HEIGHT}
-                                    rx={12}
+                                    x={x - nodeWidth / 2}
+                                    y={y - nodeHeight / 2}
+                                    width={nodeWidth}
+                                    height={nodeHeight}
+                                    rx={isSmallScreen ? 8 : 12}
                                     fill={fill}
                                     stroke={node.color}
-                                    strokeWidth={1.5}
+                                    strokeWidth={isSmallScreen ? 1 : 1.5}
                                     strokeOpacity={isDark ? 0.6 : 0.8}
                                 />
 
-                                <g transform={`translate(${x - NODE_WIDTH / 2}, ${y - NODE_HEIGHT / 2})`}>
+                                <g transform={`translate(${x - nodeWidth / 2}, ${y - nodeHeight / 2})`}>
                                     {node.icons && node.icons.map((icon, index) => (
                                         <image
                                             key={index}
                                             href={icon}
-                                            x={14 + (index * 16)}
-                                            y={12}
-                                            height="14"
-                                            width="14"
+                                            x={(screenSize === 'small' ? 6 : screenSize === 'medium' ? 10 : 14) + (index * iconSpacing)}
+                                            y={screenSize === 'small' ? 6 : screenSize === 'medium' ? 9 : 12}
+                                            height={iconSize}
+                                            width={iconSize}
                                             style={{ opacity: 0.8 }}
                                         />
                                     ))}
 
                                     <rect
-                                        x={node.icons ? 14 + (node.icons.length * 16) + 8 : 30}
-                                        y={16}
-                                        width={isInput ? 26 : 38}
-                                        height={4}
+                                        x={node.icons ? (screenSize === 'small' ? 6 : screenSize === 'medium' ? 10 : 14) + (node.icons.length * iconSpacing) + (screenSize === 'small' ? 3 : screenSize === 'medium' ? 5 : 8) : (screenSize === 'small' ? 15 : screenSize === 'medium' ? 22 : 30)}
+                                        y={screenSize === 'small' ? 8 : screenSize === 'medium' ? 12 : 16}
+                                        width={isInput ? (screenSize === 'small' ? 12 : screenSize === 'medium' ? 18 : 26) : (screenSize === 'small' ? 18 : screenSize === 'medium' ? 28 : 38)}
+                                        height={screenSize === 'small' ? 2 : screenSize === 'medium' ? 3 : 4}
                                         rx={2}
                                         fill={isDark ? "#333" : "#d1d5db"}
                                     />
 
                                     <rect
-                                        x={14} y={30} width={NODE_WIDTH - 28} height={4} rx={2}
+                                        x={screenSize === 'small' ? 6 : screenSize === 'medium' ? 10 : 14}
+                                        y={screenSize === 'small' ? 18 : screenSize === 'medium' ? 24 : 30}
+                                        width={nodeWidth - (screenSize === 'small' ? 12 : screenSize === 'medium' ? 20 : 28)}
+                                        height={screenSize === 'small' ? 2 : screenSize === 'medium' ? 3 : 4}
+                                        rx={2}
                                         fill={isDark ? "#262626" : "#e5e7eb"}
                                     />
                                     <rect
-                                        x={14} y={40} width={(NODE_WIDTH - 28) * 0.55} height={4} rx={2}
+                                        x={screenSize === 'small' ? 6 : screenSize === 'medium' ? 10 : 14}
+                                        y={screenSize === 'small' ? 24 : screenSize === 'medium' ? 32 : 40}
+                                        width={(nodeWidth - (screenSize === 'small' ? 12 : screenSize === 'medium' ? 20 : 28)) * 0.55}
+                                        height={screenSize === 'small' ? 2 : screenSize === 'medium' ? 3 : 4}
+                                        rx={2}
                                         fill={isDark ? "#262626" : "#e5e7eb"}
                                     />
                                 </g>
 
                                 <text
                                     x={x}
-                                    y={isInput ? y - NODE_HEIGHT / 2 - 10 : y + NODE_HEIGHT / 2 + 14}
+                                    y={isInput ? y - nodeHeight / 2 - labelOffset : y + nodeHeight / 2 + labelOffsetBelow}
                                     textAnchor="middle"
                                     dominantBaseline="middle"
-                                    className="text-[10px] font-medium uppercase tracking-wider"
+                                    className={`font-medium uppercase tracking-wider ${screenSize === 'small' ? 'text-[6px]' : screenSize === 'medium' ? 'text-[8px]' : 'text-[10px]'}`}
                                     style={{ fill: node.color }}
                                     opacity={isDark ? 0.75 : 0.85}
                                 >

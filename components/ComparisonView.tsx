@@ -62,13 +62,13 @@ const ChatPanel: React.FC<{
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay }}
-            className={`flex-1 flex flex-col rounded-2xl overflow-hidden ${isDark
+            className={`flex-1 min-h-[300px] md:min-h-0 flex flex-col rounded-xl sm:rounded-2xl overflow-hidden ${isDark
                 ? 'bg-[#111] border border-white/[0.08]'
                 : 'bg-white border border-gray-200 shadow-sm'
                 }`}
         >
             {/* Header */}
-            <div className={`flex items-center gap-3 px-5 py-4 border-b ${isDark ? 'border-white/[0.06]' : 'border-gray-100'}`}>
+            <div className={`flex items-center gap-2 sm:gap-3 px-3 sm:px-5 py-3 sm:py-4 border-b ${isDark ? 'border-white/[0.06]' : 'border-gray-100'}`}>
                 <img
                     src={logo}
                     alt={model}
@@ -86,7 +86,7 @@ const ChatPanel: React.FC<{
             </div>
 
             {/* Content */}
-            <div className="flex-1 p-5 overflow-y-auto space-y-6">
+            <div className="flex-1 p-3 sm:p-5 overflow-y-auto space-y-4 sm:space-y-6">
                 {children}
             </div>
         </motion.div>
@@ -122,9 +122,9 @@ const AIMsg: React.FC<{ children: React.ReactNode; isDark: boolean; delay: numbe
 
 const ComparisonView: React.FC<ComparisonViewProps> = ({ isDark = true }) => {
     return (
-        <div className="relative w-full h-full flex flex-col pt-24 px-4 pb-4">
-            {/* Two panels */}
-            <div className="flex-1 flex gap-4 min-h-0">
+        <div className="relative w-full h-full flex flex-col pt-20 sm:pt-24 px-2 sm:px-4 pb-2 sm:pb-4">
+            {/* Two panels - stack vertically on small screens, side-by-side on larger */}
+            <div className="flex-1 flex flex-col md:flex-row gap-2 sm:gap-4 min-h-0 overflow-auto">
                 {/* GPT-4o Panel */}
                 <ChatPanel model="GPT-4o" logo="/logos/openai.svg" invertLogo isDark={isDark} delay={0.1} color="#3B82F6">
                     <UserMsg text="Quick comparison: Next.js App Router vs Pages Router for data fetching?" isDark={isDark} delay={0.2} />
