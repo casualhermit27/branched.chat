@@ -7,12 +7,7 @@ import TreeVisualization from './TreeVisualization';
 import ComparisonView from './ComparisonView';
 import { Header } from './Header';
 
-interface HeroProps {
-    onWatchDemo: () => void;
-    isDark: boolean;
-    onOpenAbout: () => void;
-    toggleTheme: () => void;
-}
+
 
 const HIGHLIGHTS = [
     'Compare models side-by-side',
@@ -277,13 +272,19 @@ const VisualizationPanel: React.FC<{ isDark: boolean }> = ({ isDark }) => {
     );
 };
 
-export const Hero: React.FC<HeroProps> = ({ onWatchDemo, isDark, onOpenAbout, toggleTheme }) => {
+interface HeroProps {
+    onWatchDemo: () => void;
+    isDark: boolean;
+    toggleTheme: () => void;
+}
+
+export const Hero: React.FC<HeroProps> = ({ onWatchDemo, isDark, toggleTheme }) => {
     return (
         <section className="relative min-h-[100vh] w-full flex">
             {/* Left Half - Content */}
             <div className={`w-full lg:w-1/2 flex flex-col py-6 px-6 md:px-10 lg:px-14 ${isDark ? 'bg-[#0a0a0a]' : 'bg-[#f8f9fa]'}`}>
                 {/* Header */}
-                <Header onOpenAbout={onOpenAbout} isDark={isDark} toggleTheme={toggleTheme} />
+                <Header isDark={isDark} toggleTheme={toggleTheme} />
 
                 {/* Center-aligned Content */}
                 <div className="flex-1 flex flex-col items-center justify-center mt-4">

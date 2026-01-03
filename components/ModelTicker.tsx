@@ -3,11 +3,15 @@ import { motion, useInView } from 'framer-motion';
 
 const MODELS = [
     { name: 'GPT-4o', logo: '/logos/openai.svg' },
+    { name: 'GPT 5.2', logo: '/logos/openai.svg' },
     { name: 'Claude 3.5', logo: '/logos/claude-ai-icon.svg' },
+    { name: 'Claude 4.5', logo: '/logos/claude-ai-icon.svg' },
     { name: 'Gemini Pro', logo: '/logos/gemini.svg' },
+    { name: 'Gemini 3 Pro', logo: '/logos/gemini.svg' },
     { name: 'Mistral Large', logo: '/logos/mistral-ai_logo.svg' },
     { name: 'Grok', logo: '/logos/xai_light.svg' },
     { name: 'Llama 3', logo: '/logos/ollama_light.svg' },
+    { name: 'GLM 4.7', logo: '/logos/zai-dark.svg' },
 ];
 
 interface ModelTickerProps {
@@ -37,29 +41,34 @@ export const ModelTicker: React.FC<ModelTickerProps> = ({ isDark = true }) => {
             </div>
 
             {/* Minimal Marquee - No pills, just logos and text */}
-            <div className="relative overflow-hidden mask-gradient">
-                <div className="flex gap-16 sm:gap-20 items-center whitespace-nowrap animate-marquee">
-                    {[...MODELS, ...MODELS, ...MODELS, ...MODELS].map((model, idx) => (
-                        <div
-                            key={idx}
-                            className={`flex items-center gap-3 transition-opacity duration-300 ${isDark
-                                ? 'opacity-60 hover:opacity-100'
-                                : 'opacity-50 hover:opacity-90'
-                                }`}
-                        >
-                            <img
-                                src={model.logo}
-                                alt={model.name}
-                                className="h-5 w-auto"
-                                style={{
-                                    filter: !isDark && ['GPT-4o', 'Grok', 'Llama 3', 'Mistral Large'].includes(model.name) ? 'invert(1)' : 'none'
-                                }}
-                            />
-                            <span className={`text-sm font-medium ${isDark ? 'text-white/80' : 'text-gray-700'}`}>
-                                {model.name}
-                            </span>
-                        </div>
-                    ))}
+            <div className="relative overflow-hidden mask-gradient group">
+                <div className="flex gap-16 sm:gap-20 items-center whitespace-nowrap animate-marquee group-hover:paused">
+                    {[...MODELS, ...MODELS, ...MODELS, ...MODELS].map((model, idx) => {
+                        const shouldInvertLight = !isDark && ['GPT-4o', 'GPT 5.2', 'Grok', 'Llama 3', 'Mistral Large'].includes(model.name);
+                        const shouldInvertDark = isDark && model.name === 'GLM 4.7';
+
+                        return (
+                            <div
+                                key={idx}
+                                className={`flex items-center gap-3 transition-opacity duration-300 ${isDark
+                                    ? 'opacity-60 hover:opacity-100'
+                                    : 'opacity-50 hover:opacity-90'
+                                    }`}
+                            >
+                                <img
+                                    src={model.logo}
+                                    alt={model.name}
+                                    className="h-5 w-auto"
+                                    style={{
+                                        filter: shouldInvertLight || shouldInvertDark ? 'invert(1)' : 'none'
+                                    }}
+                                />
+                                <span className={`text-sm font-medium ${isDark ? 'text-white/80' : 'text-gray-700'}`}>
+                                    {model.name}
+                                </span>
+                            </div>
+                        )
+                    })}
                 </div>
             </div>
 
@@ -70,6 +79,9 @@ export const ModelTicker: React.FC<ModelTickerProps> = ({ isDark = true }) => {
                 }
                 .animate-marquee {
                     animation: marquee 50s linear infinite;
+                }
+                .group:hover .animate-marquee {
+                    animation-play-state: paused;
                 }
                 @keyframes marquee {
                     0% { transform: translateX(0); }

@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { GitBranch, LayoutGrid, Sparkles, Key, Keyboard, Brain, MousePointerClick, LucideIcon } from 'lucide-react';
+import { GitBranch, LayoutGrid, Sparkles, Key, Brain, MousePointerClick, LucideIcon } from 'lucide-react';
 
 interface FeaturesProps {
     isDark: boolean;
@@ -11,6 +11,7 @@ interface Feature {
     title: string;
     description: React.ReactNode;
     image?: string | null;
+    logos?: string[];
     note?: string;
 }
 
@@ -50,12 +51,15 @@ const FEATURES: Feature[] = [
     {
         icon: Key,
         title: 'BYOK',
-        description: <>Bring your own API keys. <strong>Zero markup</strong> on token costs.</>,
-    },
-    {
-        icon: Keyboard,
-        title: 'Keyboard First',
-        description: <>Command palette, <em>vim-style</em> navigation, <strong>zero-mouse</strong> workflows.</>,
+        description: <>Bring your own keys for <strong>OpenAI</strong>, <strong>Anthropic</strong>, <strong>Gemini</strong>, <strong>Mistral</strong>, <strong>xAI</strong>, and <strong>Ollama</strong>.</>,
+        logos: [
+            '/logos/openai.svg',
+            '/logos/claude-ai-icon.svg',
+            '/logos/gemini.svg',
+            '/logos/mistral-ai_logo.svg',
+            '/logos/xai_light.svg',
+            '/logos/ollama_light.svg'
+        ]
     },
 ];
 
@@ -86,6 +90,9 @@ export const Features: React.FC<FeaturesProps> = ({ isDark }) => {
                         const Icon = feature.icon;
                         const ref = useRef(null);
                         const isInView = useInView(ref, { once: true, margin: "-50px" });
+
+                        // Force dark background for BYOK (logos) or if global theme is dark
+                        const isLookDark = isDark || !!feature.logos;
 
                         return (
                             <motion.div
@@ -133,7 +140,7 @@ export const Features: React.FC<FeaturesProps> = ({ isDark }) => {
                                     <div className="lg:w-2/3">
                                         <div className={`
                                             relative aspect-[16/8] rounded-2xl overflow-hidden
-                                            ${isDark ? 'bg-[#111]' : 'bg-gray-100'}
+                                            ${isLookDark ? 'bg-black' : 'bg-white'}
                                         `}>
                                             {feature.image ? (
                                                 <img
@@ -141,11 +148,28 @@ export const Features: React.FC<FeaturesProps> = ({ isDark }) => {
                                                     alt={feature.title}
                                                     className="absolute inset-0 w-full h-full object-cover"
                                                 />
+                                            ) : feature.logos ? (
+                                                <div className="absolute inset-0 flex items-center justify-center p-8 lg:p-12">
+                                                    <div className="grid grid-cols-3 gap-10 lg:gap-14 w-fit place-items-center">
+                                                        {feature.logos.map((logo) => (
+                                                            <div key={logo} className="relative w-12 h-12 lg:w-16 lg:h-16 flex items-center justify-center">
+                                                                <img
+                                                                    src={logo}
+                                                                    alt="Model logo"
+                                                                    className={`w-full h-full object-contain opacity-90
+                                                                        ${isLookDark && !logo.includes('light') && !logo.includes('gemini') && !logo.includes('claude') && !logo.includes('openai') ? 'invert' : ''}
+                                                                        ${!isLookDark && logo.includes('light') ? 'invert' : ''}
+                                                                    `}
+                                                                />
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
                                             ) : (
                                                 /* Placeholder with icon */
                                                 <div className="absolute inset-0 flex items-center justify-center">
                                                     <Icon
-                                                        className={`w-20 h-20 ${isDark ? 'text-white/[0.06]' : 'text-black/[0.06]'}`}
+                                                        className={`w-20 h-20 ${isLookDark ? 'text-white/[0.06]' : 'text-black/[0.06]'}`}
                                                         strokeWidth={1}
                                                     />
                                                 </div>
@@ -159,6 +183,6 @@ export const Features: React.FC<FeaturesProps> = ({ isDark }) => {
                 </div>
 
             </div>
-        </div>
+        </div >
     );
 };

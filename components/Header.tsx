@@ -4,12 +4,11 @@ import { Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface HeaderProps {
-    onOpenAbout: () => void;
     isDark: boolean;
     toggleTheme: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onOpenAbout, isDark, toggleTheme }) => {
+export const Header: React.FC<HeaderProps> = ({ isDark, toggleTheme }) => {
     return (
         <header className="relative z-30 w-full px-4 sm:px-6 py-4 sm:py-8 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-0 max-w-7xl mx-auto pointer-events-none">
             {/* Logo */}
@@ -30,23 +29,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAbout, isDark, toggleTheme
                     : 'bg-black/[0.02] border-black/[0.08]'
                 }
             `}>
-                {/* About Button */}
-                <button
-                    onClick={onOpenAbout}
-                    className={`
-                        group px-3 sm:px-5 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-medium uppercase tracking-wider 
-                        transition-all duration-150
-                        ${isDark
-                            ? 'text-gray-400 hover:text-white hover:bg-white/[0.08]'
-                            : 'text-gray-600 hover:text-black hover:bg-black/[0.05]'
-                        }
-                    `}
-                >
-                    About
-                </button>
 
-                {/* Divider */}
-                <div className={`w-px h-4 sm:h-5 ${isDark ? 'bg-white/[0.08]' : 'bg-black/[0.06]'}`} />
 
                 {/* X/Twitter */}
                 <a
