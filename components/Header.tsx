@@ -33,7 +33,7 @@ export const Header: React.FC<HeaderProps> = ({ isDark, toggleTheme }) => {
 
                 {/* X/Twitter */}
                 <a
-                    href="https://x.com"
+                    href="https://x.com/branchedchat"
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`

@@ -24,7 +24,7 @@ export const Footer: React.FC<FooterProps> = ({ isDark }) => {
                     <div className="flex items-center gap-8">
                         {/* Social */}
                         <a
-                            href="https://x.com"
+                            href="https://x.com/branchedchat"
                             target="_blank"
                             rel="noopener noreferrer"
                             className={`
