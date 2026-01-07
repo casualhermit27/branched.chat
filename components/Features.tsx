@@ -51,7 +51,11 @@ const FEATURES: Feature[] = [
     {
         icon: Key,
         title: 'BYOK',
-        description: <>Bring your own keys for <strong>OpenAI</strong>, <strong>Anthropic</strong>, <strong>Gemini</strong>, <strong>Mistral</strong>, <strong>xAI</strong>, and <strong>Ollama</strong>.</>,
+        description: <>Bring your own keys for <strong>OpenAI</strong>, <strong>Anthropic</strong>, <strong>Gemini</strong>, <strong>Mistral</strong>, <strong>xAI</strong>, and <strong>Ollama</strong>.
+            <br />
+            <br />
+            <span className="text-sm opacity-50">Keys are stored locally in your browser. We never see them.</span>
+        </>,
         logos: [
             '/logos/openai.svg',
             '/logos/claude-ai-icon.svg',
