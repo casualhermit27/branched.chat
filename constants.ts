@@ -34,7 +34,7 @@ export const TREE_NODES: Node[] = [
 
 export const HERO_COPY = {
     title: "The IDE for AI Conversations.",
-    subtitle: "Don't lose context by switching tabs. Branch your prompts, compare models side-by-side, and A/B test logic in a single spatial workspace.",
+    subtitle: "Break out of the text box. Branch, compare, and merge AI conversations in a spatial workspace designed for flow state.",
     cta: "Request Access",
     success: "You're on the list. Expect an invite soon.",
 };

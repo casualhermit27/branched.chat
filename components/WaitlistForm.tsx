@@ -197,20 +197,36 @@ export const WaitlistForm: React.FC<WaitlistFormProps> = ({ isDark = true }) => 
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 1 }}
-                    className="mt-8 flex items-center justify-center gap-2 opacity-80 hover:opacity-100 transition-opacity duration-300"
+                    className="mt-10 flex flex-col items-center gap-5"
                 >
-                    {/* Status Dot */}
-                    <span className="relative flex h-1.5 w-1.5 mr-1">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-blue-500"></span>
-                    </span>
+                    {/* Beta Status Row */}
+                    <div className="flex items-center justify-center gap-2 opacity-80 hover:opacity-100 transition-opacity duration-300">
+                        {/* Status Dot */}
+                        <span className="relative flex h-1.5 w-1.5 mr-1">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                        </span>
 
-                    {/* Text Group */}
-                    <div className="flex items-center gap-3 text-[10px] font-medium uppercase tracking-widest">
-                        <span className={`transition-colors ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>Beta</span>
-                        <span className={`w-px h-3 transition-colors ${isDark ? 'bg-white/10' : 'bg-black/10'}`} />
-                        <span className={`transition-colors ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>Limited early access rolling out weekly</span>
+                        {/* Text Group */}
+                        <div className="flex items-center gap-3 text-[10px] font-medium uppercase tracking-widest">
+                            <span className={`transition-colors ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>Beta</span>
+                            <span className={`w-px h-3 transition-colors ${isDark ? 'bg-white/10' : 'bg-black/10'}`} />
+                            <span className={`transition-colors ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>Testers rolling out now</span>
+                        </div>
                     </div>
+
+                    {/* Contact Info */}
+                    <p className={`text-sm text-center ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                        Questions, feedback, or beta testing?
+                        <br />
+                        Mail us at{' '}
+                        <a
+                            href="mailto:branched.chat@gmail.com"
+                            className={`inline-block mt-1 px-3 py-1 rounded-full font-semibold transition-all ${isDark ? 'bg-violet-500/20 text-violet-300 hover:bg-violet-500/30' : 'bg-violet-100 text-violet-700 hover:bg-violet-200'}`}
+                        >
+                            branched.chat@gmail.com
+                        </a>
+                    </p>
                 </motion.div>
             )}
         </div>

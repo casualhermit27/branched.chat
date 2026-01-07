@@ -294,7 +294,7 @@ export const Hero: React.FC<HeroProps> = ({ onWatchDemo, isDark, toggleTheme }) 
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.8, delay: 0.1 }}
-                            className={`mb-6 text-sm ${isDark ? 'text-gray-500' : 'text-gray-400'}`}
+                            className={`mb-8 text-sm ${isDark ? 'text-gray-500' : 'text-gray-400'}`}
                         >
                             <span className={`italic px-2 py-0.5 rounded ${isDark ? 'bg-white/[0.06]' : 'bg-black/[0.04]'}`}>Coming soon</span>
                             <span className="mx-1">—</span>
@@ -316,7 +316,7 @@ export const Hero: React.FC<HeroProps> = ({ onWatchDemo, isDark, toggleTheme }) 
                             initial={{ opacity: 0, y: 15 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, delay: 0.4 }}
-                            className={`mt-6 text-lg sm:text-xl leading-relaxed font-light mx-auto max-w-md ${isDark ? 'text-gray-400' : 'text-gray-600'}`}
+                            className={`mt-8 text-lg sm:text-xl leading-relaxed font-light mx-auto max-w-md ${isDark ? 'text-gray-400' : 'text-gray-600'}`}
                         >
                             {HERO_COPY.subtitle}
                         </motion.p>
@@ -326,7 +326,7 @@ export const Hero: React.FC<HeroProps> = ({ onWatchDemo, isDark, toggleTheme }) 
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6, delay: 0.5 }}
-                            className="mt-8 flex flex-wrap justify-center gap-x-6 gap-y-3"
+                            className="mt-10 flex flex-wrap justify-center gap-x-8 gap-y-4"
                         >
                             {HIGHLIGHTS.map((text, idx) => (
                                 <div
@@ -354,7 +354,7 @@ export const Hero: React.FC<HeroProps> = ({ onWatchDemo, isDark, toggleTheme }) 
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, delay: 0.7 }}
-                            className="mt-8 max-w-sm mx-auto"
+                            className="mt-12 max-w-sm mx-auto"
                         >
                             <WaitlistForm isDark={isDark} />
                         </motion.div>

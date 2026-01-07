@@ -154,9 +154,9 @@ export const Features: React.FC<FeaturesProps> = ({ isDark }) => {
                                                 />
                                             ) : feature.logos ? (
                                                 <div className="absolute inset-0 flex items-center justify-center p-8 lg:p-12">
-                                                    <div className="grid grid-cols-3 gap-10 lg:gap-14 w-fit place-items-center">
+                                                    <div className="grid grid-cols-3 gap-8 gap-x-12 lg:gap-14 w-fit place-items-center">
                                                         {feature.logos.map((logo) => (
-                                                            <div key={logo} className="relative w-12 h-12 lg:w-16 lg:h-16 flex items-center justify-center">
+                                                            <div key={logo} className="relative w-10 h-10 lg:w-16 lg:h-16 flex items-center justify-center">
                                                                 <img
                                                                     src={logo}
                                                                     alt="Model logo"
